@@ -248,8 +248,103 @@ CREATE TABLE IF NOT EXISTS `saas_payments` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------------------------------------
--- 14. Seed Data
+-- 14. Accounting Engine: Account Types
 -- ----------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `account_types` (
+  `AccountTypeID` INT NOT NULL AUTO_INCREMENT,
+  `AccountTypeName` VARCHAR(100) NOT NULL,
+  `CreatedDate` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`AccountTypeID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ----------------------------------------------------------
+-- 15. Accounting Engine: Chart of Accounts
+-- ----------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `chart_of_accounts` (
+  `AccountID` INT NOT NULL AUTO_INCREMENT,
+  `tenant_id` INT DEFAULT NULL,
+  `AccountCode` VARCHAR(20) NOT NULL,
+  `AccountName` VARCHAR(255) NOT NULL,
+  `AccountTypeID` INT NOT NULL,
+  `OpeningBalance` DECIMAL(18,2) DEFAULT 0.00,
+  `CurrentBalance` DECIMAL(18,2) DEFAULT 0.00,
+  `Status` TINYINT(1) DEFAULT 1,
+  `CreatedDate` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`AccountID`),
+  INDEX `idx_coa_tenant` (`tenant_id`),
+  INDEX `idx_coa_type` (`AccountTypeID`),
+  CONSTRAINT `fk_coa_type` FOREIGN KEY (`AccountTypeID`) REFERENCES `account_types` (`AccountTypeID`),
+  CONSTRAINT `fk_coa_tenant` FOREIGN KEY (`tenant_id`) REFERENCES `tenants` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ----------------------------------------------------------
+-- 16. Accounting Engine: Journal Entries (Master)
+-- ----------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `journal_entries` (
+  `JournalID` INT NOT NULL AUTO_INCREMENT,
+  `tenant_id` INT DEFAULT NULL,
+  `JournalDate` DATE NOT NULL,
+  `ReferenceNo` VARCHAR(100) DEFAULT NULL,
+  `Description` TEXT DEFAULT NULL,
+  `CreatedBy` INT DEFAULT NULL,
+  `CreatedDate` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`JournalID`),
+  INDEX `idx_je_tenant` (`tenant_id`),
+  CONSTRAINT `fk_je_tenant` FOREIGN KEY (`tenant_id`) REFERENCES `tenants` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ----------------------------------------------------------
+-- 17. Accounting Engine: Journal Entry Details (Lines)
+-- ----------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `journal_entry_details` (
+  `JournalDetailID` INT NOT NULL AUTO_INCREMENT,
+  `JournalID` INT NOT NULL,
+  `AccountID` INT NOT NULL,
+  `DebitAmount` DECIMAL(18,2) DEFAULT 0.00,
+  `CreditAmount` DECIMAL(18,2) DEFAULT 0.00,
+  `Description` TEXT DEFAULT NULL,
+  PRIMARY KEY (`JournalDetailID`),
+  INDEX `idx_jed_journal` (`JournalID`),
+  INDEX `idx_jed_account` (`AccountID`),
+  CONSTRAINT `fk_jed_journal` FOREIGN KEY (`JournalID`) REFERENCES `journal_entries` (`JournalID`) ON DELETE CASCADE,
+  CONSTRAINT `fk_jed_account` FOREIGN KEY (`AccountID`) REFERENCES `chart_of_accounts` (`AccountID`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ----------------------------------------------------------
+-- 18. Accounting Engine: Banks
+-- ----------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `banks` (
+  `BankID` INT NOT NULL AUTO_INCREMENT,
+  `tenant_id` INT DEFAULT NULL,
+  `BankCode` VARCHAR(20) DEFAULT NULL,
+  `BankName` VARCHAR(150) NOT NULL,
+  `AccountName` VARCHAR(150) DEFAULT NULL,
+  `AccountNumber` VARCHAR(100) DEFAULT NULL,
+  `Branch` VARCHAR(100) DEFAULT NULL,
+  `OpeningBalance` DECIMAL(18,2) DEFAULT 0.00,
+  `IsDeleted` TINYINT(1) DEFAULT 0,
+  `AccountID` INT DEFAULT NULL,
+  `CreatedDate` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  `ModifiedDate` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`BankID`),
+  INDEX `idx_banks_tenant` (`tenant_id`),
+  INDEX `idx_banks_account` (`AccountID`),
+  CONSTRAINT `fk_banks_tenant` FOREIGN KEY (`tenant_id`) REFERENCES `tenants` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ----------------------------------------------------------
+-- 19. Seed Data
+-- ----------------------------------------------------------
+
+-- Default account types
+INSERT INTO `account_types` (`AccountTypeID`, `AccountTypeName`) VALUES
+(1, 'Assets'),
+(2, 'Liabilities'),
+(3, 'Equity'),
+(4, 'Income'),
+(5, 'Expenses')
+ON DUPLICATE KEY UPDATE `AccountTypeName`=VALUES(`AccountTypeName`);
+
 
 -- Default packages
 INSERT INTO `packages` (`id`, `name`, `price`, `billing_cycle`, `features`) VALUES
