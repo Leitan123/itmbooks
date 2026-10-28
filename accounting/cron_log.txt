@@ -1,0 +1,52 @@
+Cron executed on 2024-10-12 22:44:02
+Cron executed on 2024-10-13 00:30:03
+Cron executed on 2024-10-13 22:25:03
+Cron executed on 2024-10-13 22:25:04
+Cron executed on 2024-10-13 22:26:02
+Cron executed on 2024-10-13 22:27:03
+Cron executed on 2024-10-13 22:31:03
+Cron executed on 2024-10-13 22:32:02
+Cron executed on 2024-10-14 01:30:03
+Cron executed on 2024-10-14 12:30:04
+2026-06-18 18:37:04 - WhatsApp FAILED for Cust ID: 54. Response: {"error":{"message":"Invalid OAuth access token - Cannot parse access token","type":"OAuthException","code":190,"fbtrace_id":"AnuselKnVIetEq2X9fN6UXd"}}. Error: 
+2026-06-18 18:37:04 - WhatsApp FAILED for Cust ID: 83. Response: {"error":{"message":"Invalid OAuth access token - Cannot parse access token","type":"OAuthException","code":190,"fbtrace_id":"ANnJlhiwOQVpwPY3DJFzJfl"}}. Error: 
+2026-06-18 18:37:05 - WhatsApp FAILED for Cust ID: 196. Response: {"error":{"message":"Invalid OAuth access token - Cannot parse access token","type":"OAuthException","code":190,"fbtrace_id":"AKhXjoZh_fmLr4eRoRUfTC4"}}. Error: 
+2026-06-18 18:37:05 - WhatsApp FAILED for Cust ID: 210. Response: {"error":{"message":"Invalid OAuth access token - Cannot parse access token","type":"OAuthException","code":190,"fbtrace_id":"AauGLK14_KKSFuQlnkq8FZo"}}. Error: 
+2026-06-18 18:37:07 - WhatsApp FAILED for Cust ID: 228. Response: {"error":{"message":"Invalid OAuth access token - Cannot parse access token","type":"OAuthException","code":190,"fbtrace_id":"A8sdw_kSfyKSChiPIFAJsZl"}}. Error: 
+2026-06-18 18:37:08 - WhatsApp FAILED for Cust ID: 229. Response: {"error":{"message":"Invalid OAuth access token - Cannot parse access token","type":"OAuthException","code":190,"fbtrace_id":"AmS7ldJPmbDpwW_BA4lmNJC"}}. Error: 
+2026-06-18 18:37:09 - WhatsApp FAILED for Cust ID: 233. Response: {"error":{"message":"Invalid OAuth access token - Cannot parse access token","type":"OAuthException","code":190,"fbtrace_id":"AW-a3Yf8-lfiQXiUgOW5U3w"}}. Error: 
+2026-06-18 18:37:10 - WhatsApp FAILED for Cust ID: 234. Response: {"error":{"message":"Invalid OAuth access token - Cannot parse access token","type":"OAuthException","code":190,"fbtrace_id":"AfLFQ7fMVyg0Rlk7P8aF_Vo"}}. Error: 
+2026-06-19 12:52:55 - WhatsApp FAILED for Cust ID: 54. Response: {"error":{"message":"Authentication Error","code":190,"type":"OAuthException","fbtrace_id":"AU8bqt2eniMHu0acetXx1i8"}}. Error: 
+2026-06-19 12:52:56 - WhatsApp FAILED for Cust ID: 83. Response: {"error":{"message":"Authentication Error","code":190,"type":"OAuthException","fbtrace_id":"AR-mTd68lgo4sgRRBnJOTrL"}}. Error: 
+2026-06-19 12:52:57 - WhatsApp FAILED for Cust ID: 196. Response: {"error":{"message":"Authentication Error","code":190,"type":"OAuthException","fbtrace_id":"AnZTLrPRV6Vm2ZBAOGtAoUa"}}. Error: 
+2026-06-19 12:52:57 - WhatsApp FAILED for Cust ID: 210. Response: {"error":{"message":"Authentication Error","code":190,"type":"OAuthException","fbtrace_id":"AJeWj3hb_9iexk5-P7fVLDy"}}. Error: 
+2026-06-19 12:52:58 - WhatsApp FAILED for Cust ID: 228. Response: {"error":{"message":"Authentication Error","code":190,"type":"OAuthException","fbtrace_id":"AGrOoaIxtuSmjQZf_DG5NyL"}}. Error: 
+2026-06-19 12:52:58 - WhatsApp FAILED for Cust ID: 229. Response: {"error":{"message":"Authentication Error","code":190,"type":"OAuthException","fbtrace_id":"Adrww0lD5xc6XQUvPotMwMo"}}. Error: 
+2026-06-19 12:52:59 - WhatsApp FAILED for Cust ID: 233. Response: {"error":{"message":"Authentication Error","code":190,"type":"OAuthException","fbtrace_id":"Av6iMAeluyKaF_ee9_Dq4ke"}}. Error: 
+2026-06-19 12:53:00 - WhatsApp FAILED for Cust ID: 234. Response: {"error":{"message":"Authentication Error","code":190,"type":"OAuthException","fbtrace_id":"AQT-9zc77SLyQp4CyTll1YC"}}. Error: 
+2026-06-19 12:53:00 - WhatsApp FAILED for Cust ID: 237. Response: {"error":{"message":"Authentication Error","code":190,"type":"OAuthException","fbtrace_id":"A3EPTaDMSlYIdbdemelE9C8"}}. Error: 
+2026-06-19 12:55:06 - WhatsApp FAILED for Cust ID: 54. Response: {"error":{"message":"Authentication Error","code":190,"type":"OAuthException","fbtrace_id":"ATOHnJL8vfDEkXWGa429pF9"}}. Error: 
+2026-06-19 12:55:06 - WhatsApp FAILED for Cust ID: 83. Response: {"error":{"message":"Authentication Error","code":190,"type":"OAuthException","fbtrace_id":"A_-7mzyKr3tt6F-ojsuSo6T"}}. Error: 
+2026-06-19 12:55:07 - WhatsApp FAILED for Cust ID: 196. Response: {"error":{"message":"Authentication Error","code":190,"type":"OAuthException","fbtrace_id":"AlGXSo7qZq7r7cK78UZa2JL"}}. Error: 
+2026-06-19 12:55:08 - WhatsApp FAILED for Cust ID: 210. Response: {"error":{"message":"Authentication Error","code":190,"type":"OAuthException","fbtrace_id":"AhmpaO0x2RGJT51wcZhLxDu"}}. Error: 
+2026-06-19 12:55:09 - WhatsApp FAILED for Cust ID: 228. Response: {"error":{"message":"Authentication Error","code":190,"type":"OAuthException","fbtrace_id":"AB6U5iDBg5FwtPJ4_cqR_ji"}}. Error: 
+2026-06-19 12:55:09 - WhatsApp FAILED for Cust ID: 229. Response: {"error":{"message":"Authentication Error","code":190,"type":"OAuthException","fbtrace_id":"Auz0y2a6sTBiY_uB41TIR1q"}}. Error: 
+2026-06-19 12:55:10 - WhatsApp FAILED for Cust ID: 233. Response: {"error":{"message":"Authentication Error","code":190,"type":"OAuthException","fbtrace_id":"A4dsaYzDsYxFXcyimb8mCZn"}}. Error: 
+2026-06-19 12:55:10 - WhatsApp FAILED for Cust ID: 234. Response: {"error":{"message":"Authentication Error","code":190,"type":"OAuthException","fbtrace_id":"AJl92SRqmBJSCeA8JnPZivT"}}. Error: 
+2026-06-19 12:55:11 - WhatsApp FAILED for Cust ID: 237. Response: {"error":{"message":"Authentication Error","code":190,"type":"OAuthException","fbtrace_id":"AWKq5qTQPsdX0sTrMvzAqsJ"}}. Error: 
+2026-06-19 13:04:21 - WhatsApp FAILED for Cust ID: 54. Response: {"error":{"message":"Authentication Error","code":190,"type":"OAuthException","fbtrace_id":"AEqAld6yP2K5xJDXL8Y4TIn"}}. Error: 
+2026-06-19 13:04:22 - WhatsApp FAILED for Cust ID: 83. Response: {"error":{"message":"Authentication Error","code":190,"type":"OAuthException","fbtrace_id":"AXOCSqOThCJYuZKeka9tmQP"}}. Error: 
+2026-06-19 13:04:22 - WhatsApp FAILED for Cust ID: 196. Response: {"error":{"message":"Authentication Error","code":190,"type":"OAuthException","fbtrace_id":"AD4Qz7G2mpZpBnINHJQ9xJ3"}}. Error: 
+2026-06-19 13:04:23 - WhatsApp FAILED for Cust ID: 210. Response: {"error":{"message":"Authentication Error","code":190,"type":"OAuthException","fbtrace_id":"AXpVnKDYvQkzx2byU7-_5nW"}}. Error: 
+2026-06-19 13:04:23 - WhatsApp FAILED for Cust ID: 228. Response: {"error":{"message":"Authentication Error","code":190,"type":"OAuthException","fbtrace_id":"AVZmsNvekGrUNmT1EZDScCS"}}. Error: 
+2026-06-19 13:04:24 - WhatsApp FAILED for Cust ID: 229. Response: {"error":{"message":"Authentication Error","code":190,"type":"OAuthException","fbtrace_id":"Ap3AT-NtpFaCdYthgi0JE1r"}}. Error: 
+2026-06-19 13:04:24 - WhatsApp FAILED for Cust ID: 233. Response: {"error":{"message":"Authentication Error","code":190,"type":"OAuthException","fbtrace_id":"AK6LoEdiY_p8OZ3R4xINQlL"}}. Error: 
+2026-06-19 13:04:25 - WhatsApp FAILED for Cust ID: 234. Response: {"error":{"message":"Authentication Error","code":190,"type":"OAuthException","fbtrace_id":"AWRnoIUxht2s70gsAX30Vtl"}}. Error: 
+2026-06-19 13:04:25 - WhatsApp FAILED for Cust ID: 237. Response: {"error":{"message":"Authentication Error","code":190,"type":"OAuthException","fbtrace_id":"APVespr81x4Mn8QWVR_1W-z"}}. Error: 
+2026-06-19 13:20:06 - WhatsApp Manual FAILED for Cust ID: 214. Response: {"error":{"message":"Authentication Error","code":190,"type":"OAuthException","fbtrace_id":"AsvEgzKwXgSx1mUzvz4UR3H"}}. Error: 
+2026-06-19 13:20:48 - WhatsApp Manual FAILED for Cust ID: 214. Response: {"error":{"message":"Authentication Error","code":190,"type":"OAuthException","fbtrace_id":"Aysh6U9_DdUq_lo048R6ZFt"}}. Error: 
+2026-06-19 13:24:33 - WhatsApp Manual FAILED for Cust ID: 214. Response: {"error":{"message":"Authentication Error","code":190,"type":"OAuthException","fbtrace_id":"Ai-zmOlswD6H6PRf6lcbloe"}}. Error: 
+2026-06-19 13:53:38 - WhatsApp Manual FAILED for Cust ID: 214. Response: {"error":{"message":"Unsupported post request. Object with ID '1185416001318035' does not exist, cannot be loaded due to missing permissions, or does not support this operation. Please read the Graph API documentation at https://developers.facebook.com/docs/graph-api","code":100,"type":"GraphMethodException","error_subcode":33,"fbtrace_id":"AXRDwNIz8uaPzWaygGwUcMs"}}. Error: 
+2026-06-19 14:08:30 - WhatsApp Manual FAILED for Cust ID: 214. Response: {"error":{"message":"Unsupported post request. Object with ID '1185416001318035' does not exist, cannot be loaded due to missing permissions, or does not support this operation. Please read the Graph API documentation at https://developers.facebook.com/docs/graph-api","code":100,"type":"GraphMethodException","error_subcode":33,"fbtrace_id":"AZLSlckK2K1ikn4kocohgYl"}}. Error: 
+2026-06-20 19:40:00 - WhatsApp Manual FAILED for Cust ID: 214. Response: {"error":{"message":"Error validating access token: Session has expired on Friday, 19-Jun-26 06:00:00 PDT. The current time is Saturday, 20-Jun-26 07:10:00 PDT.","type":"OAuthException","code":190,"error_subcode":463,"fbtrace_id":"A44lEcHTGTH-JvTrrWCZGPU"}}. Error: 
+2026-06-20 19:54:21 - WhatsApp Manual FAILED for Cust ID: 214. Response: {"error":{"message":"Error validating access token: Session has expired on Friday, 19-Jun-26 06:00:00 PDT. The current time is Saturday, 20-Jun-26 07:24:21 PDT.","type":"OAuthException","code":190,"error_subcode":463,"fbtrace_id":"A5843MDS1ZI0lldMO0j5xL8"}}. Error: 

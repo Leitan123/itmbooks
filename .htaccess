@@ -1,0 +1,6 @@
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  
+  # Proxy all requests to the Next.js app running on port 3000
+  RewriteRule ^(.*)$ http://localhost:3000/itmbooks.com/$1 [P,L]
+</IfModule>

@@ -1,0 +1,102 @@
+.pricing-page {
+  display: flex;
+  flex-direction: column;
+}
+.pricing-hero {
+  padding: 6rem 0 4rem;
+  background: var(--bg-alt);
+}
+.pricing-hero h1 {
+  font-size: 3rem;
+  font-weight: 800;
+  margin-bottom: 1.5rem;
+}
+.pricing-subtitle {
+  font-size: 1.25rem;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto;
+}
+.pricing-plans-section {
+  padding: 4rem 0 8rem;
+  background: var(--bg-alt);
+}
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  align-items: start;
+}
+.pricing-card {
+  background: var(--bg-color);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 2.5rem 2rem;
+  text-align: center;
+  position: relative;
+  transition: transform 0.2s ease;
+}
+.pricing-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+}
+.pricing-card.popular {
+  border-color: var(--primary-color);
+  box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+}
+.popular-badge {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--primary-color);
+  color: #fff;
+  padding: 0.25rem 1rem;
+  border-radius: 99px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.pricing-card h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+.plan-desc {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  margin-bottom: 1.5rem;
+  min-height: 45px;
+}
+.price {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+}
+.price span {
+  font-size: 3rem;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+.plan-features {
+  text-align: left;
+  margin-bottom: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.plan-features li {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+}
+.plan-features li::before {
+  content: '✓';
+  color: var(--success);
+  font-weight: bold;
+  margin-right: 0.75rem;
+}
+.btn-block {
+  display: block;
+  width: 100%;
+}

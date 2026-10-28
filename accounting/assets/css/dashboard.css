@@ -1,0 +1,413 @@
+/* ==========================================================================
+   Zoho Books Style ERP Dashboard CSS System
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+    background-color: #f4f6f9 !important;
+    color: #334155;
+}
+
+/* Navbar Top Bar Theme Overrides */
+.navbar-custom {
+    background: #2f3d4f !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+.navbar-custom .button-menu-mobile {
+    color: #ffffff !important;
+}
+
+/* Page Header & Breadcrumb */
+.zoho-page-header {
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.zoho-page-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0;
+    letter-spacing: -0.3px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.zoho-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: #64748b;
+    margin: 0;
+}
+
+.zoho-breadcrumb a {
+    color: #2563eb;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.zoho-breadcrumb a:hover {
+    text-decoration: underline;
+}
+
+/* Base Zoho Card Container */
+.card-box, .zoho-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04), 0 1px 2px rgba(15, 23, 42, 0.03);
+    transition: all 0.2s ease-in-out;
+}
+
+.card-box:hover, .zoho-card:hover {
+    box-shadow: 0 10px 20px -3px rgba(15, 23, 42, 0.06), 0 4px 6px -4px rgba(15, 23, 42, 0.02);
+    border-color: #cbd5e1;
+}
+
+.card-box .header-title, .zoho-card-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0 0 16px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    letter-spacing: -0.2px;
+}
+
+.zoho-card-title i {
+    margin-right: 6px;
+}
+
+/* KPI Summary Cards */
+.zoho-kpi-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.zoho-kpi-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px -2px rgba(15, 23, 42, 0.08);
+}
+
+.zoho-kpi-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: #cbd5e1;
+}
+
+/* Theme accent bars */
+.zoho-kpi-sales::before { background: #0284c7; }
+.zoho-kpi-received::before { background: #059669; }
+.zoho-kpi-due::before { background: #d97706; }
+.zoho-kpi-expenses::before { background: #dc2626; }
+.zoho-kpi-profit::before { background: #4f46e5; }
+.zoho-kpi-cashflow::before { background: #0d9488; }
+.zoho-kpi-payable::before { background: #e11d48; }
+.zoho-kpi-quotation::before { background: #d97706; }
+
+.zoho-kpi-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.zoho-kpi-icon-box {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+}
+
+.zoho-kpi-sales .zoho-kpi-icon-box { background: #e0f2fe; color: #0284c7; }
+.zoho-kpi-received .zoho-kpi-icon-box { background: #d1fae5; color: #059669; }
+.zoho-kpi-due .zoho-kpi-icon-box { background: #fef3c7; color: #d97706; }
+.zoho-kpi-expenses .zoho-kpi-icon-box { background: #fee2e2; color: #dc2626; }
+.zoho-kpi-profit .zoho-kpi-icon-box { background: #e0e7ff; color: #4f46e5; }
+.zoho-kpi-cashflow .zoho-kpi-icon-box { background: #ccfbf1; color: #0d9488; }
+.zoho-kpi-payable .zoho-kpi-icon-box { background: #ffe4e6; color: #e11d48; }
+.zoho-kpi-quotation .zoho-kpi-icon-box { background: #fef3c7; color: #d97706; }
+
+.zoho-kpi-label {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #64748b;
+    margin-bottom: 4px;
+}
+
+.zoho-kpi-value {
+    font-size: 22px;
+    font-weight: 800;
+    color: #0f172a;
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+    margin-bottom: 6px;
+}
+
+.zoho-kpi-subtext {
+    font-size: 12px;
+    color: #64748b;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.zoho-kpi-subtext strong {
+    color: #1e293b;
+}
+
+/* Progress bar inside KPI */
+.zoho-progress-track {
+    height: 4px;
+    background: #f1f5f9;
+    border-radius: 2px;
+    margin-top: 8px;
+    margin-bottom: 4px;
+    overflow: hidden;
+}
+
+.zoho-progress-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.3s ease;
+}
+
+.zoho-kpi-sales .zoho-progress-fill { background: #0284c7; }
+.zoho-kpi-received .zoho-progress-fill { background: #059669; }
+
+/* Growth / Change Pills */
+.zoho-growth-pill {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.zoho-growth-up { background: #d1fae5; color: #065f46; }
+.zoho-growth-down { background: #fee2e2; color: #991b1b; }
+.zoho-growth-neutral { background: #f1f5f9; color: #475569; }
+
+/* Financial Summary Banner */
+.zoho-summary-strip {
+    background: linear-gradient(135deg, #2f3d4f 0%, #3d4f66 100%);
+    border-radius: 12px;
+    color: #ffffff;
+    padding: 20px 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 14px rgba(47, 61, 79, 0.2);
+}
+
+.zoho-summary-title {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: #e0f7fc;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.zoho-summary-grid {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.zoho-summary-item {
+    flex: 1;
+    min-width: 140px;
+}
+
+.zoho-summary-item-label {
+    font-size: 12px;
+    color: #e0f7fc;
+    margin-bottom: 4px;
+    font-weight: 600;
+}
+
+.zoho-summary-item-val {
+    font-size: 18px;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: -0.3px;
+}
+
+.zoho-summary-divider {
+    width: 1px;
+    height: 36px;
+    background: rgba(255, 255, 255, 0.25);
+}
+
+/* Zoho Clean Tables */
+.table-responsive {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.table.zoho-table {
+    width: 100%;
+    margin-bottom: 0;
+    border: 1px solid #cbd5e1;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 8px;
+}
+
+.table.zoho-table thead tr {
+    background: #2f3d4f;
+    color: #ffffff;
+}
+
+.table.zoho-table thead th {
+    padding: 12px 14px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: none;
+    color: #ffffff;
+}
+
+.table.zoho-table tbody td {
+    padding: 12px 14px;
+    font-size: 12px;
+    color: #334155;
+    border-bottom: 1px solid #f1f5f9;
+    vertical-align: middle;
+}
+
+.table.zoho-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.table.zoho-table tbody tr:hover {
+    background-color: #f8fafc;
+}
+
+.table.zoho-table tfoot tr {
+    background-color: #f1f5f9;
+    font-weight: 700;
+}
+
+.table.zoho-table tfoot th, .table.zoho-table tfoot td {
+    padding: 12px 14px;
+    border-top: 2px solid #e2e8f0;
+    color: #0f172a;
+}
+
+/* Status Pill Badges */
+.status-pill {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    line-height: 1.3;
+}
+
+.status-pill-danger {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.status-pill-warning {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.status-pill-info {
+    background: #e0f2fe;
+    color: #075985;
+}
+
+.status-pill-success {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.status-pill-neutral {
+    background: #f1f5f9;
+    color: #475569;
+}
+
+/* Buttons & Quick Links */
+.btn-zoho {
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 5px 12px;
+    transition: all 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.btn-zoho-primary {
+    background: #2563eb;
+    color: #ffffff;
+    border: none;
+}
+
+.btn-zoho-primary:hover {
+    background: #1d4ed8;
+    color: #ffffff;
+}
+
+.btn-zoho-success {
+    background: #10b981;
+    color: #ffffff;
+    border: none;
+}
+
+.btn-zoho-success:hover {
+    background: #059669;
+    color: #ffffff;
+}
+
+.btn-zoho-outline {
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    color: #334155;
+}
+
+.btn-zoho-outline:hover {
+    background: #f8fafc;
+    border-color: #94a3b8;
+    color: #0f172a;
+}
