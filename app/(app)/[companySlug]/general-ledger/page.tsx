@@ -21,6 +21,13 @@ export default async function GeneralLedgerPage({
   const resolvedParams = await params;
   const resolvedSearchParams = await searchParams;
   const companySlug = resolvedParams.companySlug || 'dashboard';
+  const rawAccountType = session.user.accountType || 'Invoice';
+  const isAccounting = rawAccountType === 'Accounting' || rawAccountType === 'Accounts';
+
+  if (!isAccounting) {
+    redirect(`/${companySlug}`);
+  }
+
   const tenantId = session.user.tenantId ? parseInt(session.user.tenantId) : 1000;
   const initialAccountId = resolvedSearchParams.accountId ? parseInt(resolvedSearchParams.accountId) : undefined;
 

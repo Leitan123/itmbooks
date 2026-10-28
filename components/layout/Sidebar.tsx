@@ -52,7 +52,7 @@ export default function Sidebar() {
       <div className="sidebar-header">
         <Link href={`/${companySlug}`} className="sidebar-logo">ITM BOOKS</Link>
         <div style={{ fontSize: '11px', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em', marginTop: '2px' }}>
-          {accountType === 'Accounting' ? 'Full Accounting Edition' : accountType}
+          {accountType === 'Accounting' ? 'Full Accounting Edition' : accountType === 'Inventory' ? 'Inventory Edition' : 'Invoicing Edition'}
         </div>
       </div>
       

@@ -13,6 +13,13 @@ export default async function ProfitLossPage({ params }: { params: Promise<{ com
 
   const resolvedParams = await params;
   const companySlug = resolvedParams.companySlug || 'dashboard';
+  const rawAccountType = session.user.accountType || 'Invoice';
+  const isAccounting = rawAccountType === 'Accounting' || rawAccountType === 'Accounts';
+
+  if (!isAccounting) {
+    redirect(`/${companySlug}`);
+  }
+
   const tenantId = session.user.tenantId ? parseInt(session.user.tenantId) : 1000;
 
   let initialData: any = {
