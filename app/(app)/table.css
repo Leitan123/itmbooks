@@ -149,8 +149,8 @@
 
 .form-control:focus {
   outline: none;
-  border-color: #2f54eb;
-  box-shadow: 0 0 0 3px rgba(47, 84, 235, 0.1);
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px var(--primary-ring);
 }
 
 textarea.form-control {

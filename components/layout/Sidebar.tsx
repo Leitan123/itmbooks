@@ -39,7 +39,10 @@ export default function Sidebar() {
   return (
     <aside className="dashboard-sidebar">
       <div className="sidebar-header">
-        <Link href={`/${companySlug}`} className="sidebar-logo">ITM BOOKS</Link>
+        <Link href={`/${companySlug}`} className="sidebar-logo">
+          <span className="logo-dot" aria-hidden="true" />
+          <span className="logo-itm">ITM</span> <span className="logo-books">BOOKS</span>
+        </Link>
       </div>
       
       <nav className="sidebar-nav">

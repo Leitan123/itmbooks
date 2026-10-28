@@ -1,20 +1,30 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 :root {
-  --primary-color: #4F46E5; /* Indigo 600 */
-  --primary-hover: #4338CA;
-  --secondary-color: #2563EB; /* Blue 600 */
+  /* ITM Books brand palette (sampled from the logo) */
+  --brand-blue: #168FCE;   /* bright blue - "m" & "BOOKS" */
+  --brand-navy: #00539B;   /* deep blue - "i" block */
+  --brand-green: #8FB71B;  /* lime green - dot on the "i" */
+
+  --primary-color: var(--brand-blue);
+  --primary-hover: var(--brand-navy);
+  --primary-soft: #E8F4FB;  /* light tint for hover / active backgrounds */
+  --primary-ring: rgba(22, 143, 206, 0.18);
+  --primary-gradient: linear-gradient(135deg, var(--brand-navy) 0%, var(--brand-blue) 100%);
+  --secondary-color: var(--brand-navy);
+  --accent-color: var(--brand-green);
+  --accent-hover: #7AA013;
   
   --bg-color: #FFFFFF;
-  --bg-alt: #F9FAFB;
+  --bg-alt: #F4F9FD;
   
-  --text-primary: #111827;
-  --text-secondary: #4B5563;
-  --text-light: #9CA3AF;
+  --text-primary: #0B2540;
+  --text-secondary: #4A6076;
+  --text-light: #8A9BAD;
   
-  --border-color: #E5E7EB;
+  --border-color: #DDE9F3;
   
-  --success: #10B981;
+  --success: #6B9A12;
   --warning: #F59E0B;
   --error: #EF4444;
   
@@ -66,12 +76,24 @@ ul {
 }
 
 .btn-primary {
-  background-color: var(--primary-color);
+  background: var(--primary-gradient);
   color: #fff;
+  box-shadow: 0 4px 12px rgba(22, 143, 206, 0.28);
 }
 
 .btn-primary:hover {
-  background-color: var(--primary-hover);
+  background: var(--primary-hover);
+  box-shadow: 0 6px 16px rgba(0, 83, 155, 0.32);
+  transform: translateY(-1px);
+}
+
+.btn-accent {
+  background-color: var(--accent-color);
+  color: #fff;
+}
+
+.btn-accent:hover {
+  background-color: var(--accent-hover);
   transform: translateY(-1px);
 }
 
@@ -82,5 +104,7 @@ ul {
 }
 
 .btn-secondary:hover {
-  background-color: var(--bg-alt);
+  background-color: var(--primary-soft);
+  border-color: var(--primary-color);
+  color: var(--primary-hover);
 }

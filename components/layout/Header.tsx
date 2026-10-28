@@ -6,7 +6,10 @@ export default function Header() {
     <header className="site-header">
       <div className="container header-inner">
         <div className="logo">
-          <Link href="/">ITM BOOKS</Link>
+          <Link href="/">
+            <span className="logo-dot" aria-hidden="true" />
+            <span className="logo-itm">ITM</span> <span className="logo-books">BOOKS</span>
+          </Link>
         </div>
         <nav className="desktop-nav">
           <ul className="nav-links">

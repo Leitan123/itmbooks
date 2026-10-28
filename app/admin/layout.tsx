@@ -11,8 +11,8 @@ export default function AdminLayout({
       <div className="dashboard-layout">
         
         {/* Sidebar */}
-        <aside className="dashboard-sidebar" style={{ backgroundColor: '#0f172a' }}>
-          <div className="sidebar-header" style={{ borderBottom: '1px solid #1e293b' }}>
+        <aside className="dashboard-sidebar" style={{ backgroundColor: '#04294A' }}>
+          <div className="sidebar-header" style={{ borderBottom: '1px solid #0B3E6B' }}>
             <div className="sidebar-logo" style={{ color: '#fff' }}>Parent Panel</div>
           </div>
           
@@ -25,7 +25,7 @@ export default function AdminLayout({
             </div>
           </nav>
           
-          <div className="sidebar-footer" style={{ borderTop: '1px solid #1e293b' }}>
+          <div className="sidebar-footer" style={{ borderTop: '1px solid #0B3E6B' }}>
             <Link href="/login" className="sidebar-link" style={{ color: '#cbd5e1' }}>
               &larr; Exit Admin
             </Link>
@@ -39,7 +39,7 @@ export default function AdminLayout({
             <div className="search-bar"></div>
             <div className="topbar-actions">
               <div className="org-selector">Super Admin ▾</div>
-              <div className="user-avatar" style={{ backgroundColor: '#0f172a' }}>SA</div>
+              <div className="user-avatar" style={{ backgroundColor: '#04294A' }}>SA</div>
             </div>
           </header>
 

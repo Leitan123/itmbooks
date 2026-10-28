@@ -12,11 +12,24 @@
   height: 80px;
 }
 .logo a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
   font-size: 1.5rem;
   font-weight: 800;
   color: var(--primary-color);
   letter-spacing: -0.5px;
 }
+.logo-dot {
+  width: 0.6em;
+  height: 0.6em;
+  border-radius: 50%;
+  background: var(--brand-green);
+  display: inline-block;
+  margin-right: 0.1rem;
+}
+.logo-itm { color: var(--brand-navy); }
+.logo-books { color: var(--brand-blue); font-style: italic; }
 .nav-links {
   display: flex;
   gap: 2rem;

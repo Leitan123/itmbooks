@@ -183,7 +183,7 @@ export default function PaymentsReceivedPage() {
                     <td style={{ textAlign: 'right' }}>
                       <button 
                         onClick={() => handleOpenModal(payment)} 
-                        style={{ background: 'none', border: 'none', color: '#2f54eb', cursor: 'pointer', marginRight: '1rem', fontWeight: 500 }}
+                        style={{ background: 'none', border: 'none', color: 'var(--primary-color)', cursor: 'pointer', marginRight: '1rem', fontWeight: 500 }}
                       >
                         Edit
                       </button>

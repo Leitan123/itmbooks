@@ -1,6 +1,6 @@
 /* Dashboard Base Styles */
 .dashboard-body {
-  background-color: #f8fafc;
+  background-color: var(--bg-alt);
   min-height: 100vh;
 }
 .dashboard-layout {
@@ -29,12 +29,25 @@
   border-bottom: 1px solid var(--border-color);
 }
 .sidebar-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
   font-size: 1.25rem;
   font-weight: 800;
   color: var(--primary-color);
   text-decoration: none;
   letter-spacing: -0.5px;
 }
+.sidebar-logo .logo-dot {
+  width: 0.55em;
+  height: 0.55em;
+  border-radius: 50%;
+  background: var(--brand-green);
+  display: inline-block;
+  margin-right: 0.1rem;
+}
+.sidebar-logo .logo-itm { color: var(--brand-navy); }
+.sidebar-logo .logo-books { color: var(--brand-blue); font-style: italic; }
 .sidebar-nav {
   padding: 1.5rem 1rem;
   flex: 1;
@@ -65,8 +78,12 @@
   transition: all 0.2s;
 }
 .sidebar-link:hover, .sidebar-link.active {
-  background-color: #f1f5f9;
-  color: var(--primary-color);
+  background-color: var(--primary-soft);
+  color: var(--brand-navy);
+}
+.sidebar-link.active {
+  box-shadow: inset 3px 0 0 var(--brand-green);
+  font-weight: 600;
 }
 .sidebar-footer {
   padding: 1rem;
@@ -104,7 +121,7 @@
   padding: 0.5rem 1rem;
   width: 300px;
   font-size: 0.9rem;
-  background-color: #f8fafc;
+  background-color: var(--bg-alt);
 }
 .search-input:focus {
   outline: none;
@@ -129,7 +146,7 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background-color: var(--primary-color);
+  background: var(--primary-gradient);
   color: #fff;
   display: flex;
   align-items: center;

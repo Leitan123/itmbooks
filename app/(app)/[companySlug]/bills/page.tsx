@@ -222,7 +222,7 @@ export default function BillsPage() {
                     <td style={{ textAlign: 'right' }}>
                       <button 
                         onClick={() => handleOpenModal(bill)} 
-                        style={{ background: 'none', border: 'none', color: '#2f54eb', cursor: 'pointer', marginRight: '1rem', fontWeight: 500 }}
+                        style={{ background: 'none', border: 'none', color: 'var(--primary-color)', cursor: 'pointer', marginRight: '1rem', fontWeight: 500 }}
                       >
                         Edit
                       </button>
@@ -312,7 +312,7 @@ export default function BillsPage() {
                     </div>
                   </div>
                 ))}
-                <button type="button" onClick={addLineItem} style={{ background: 'none', border: 'none', color: '#2f54eb', cursor: 'pointer', fontWeight: 500, fontSize: '0.875rem' }}>
+                <button type="button" onClick={addLineItem} style={{ background: 'none', border: 'none', color: 'var(--primary-color)', cursor: 'pointer', fontWeight: 500, fontSize: '0.875rem' }}>
                   + Add another line
                 </button>
               </div>

@@ -130,7 +130,7 @@ export default function SettingsForm({ initialData, basePath }: { initialData: S
               <input 
                 type="color" 
                 name="theme_color" 
-                value={formData.theme_color || '#4F46E5'} 
+                value={formData.theme_color || '#168FCE'} 
                 onChange={handleChange} 
                 style={{ width: '50px', height: '40px', padding: '0', cursor: 'pointer' }}
               />

@@ -71,11 +71,11 @@ export default function InvoicingPage() {
               <Link href="/signup" className="btn btn-secondary btn-block" style={{ width: '100%', display: 'block' }}>Start Free Trial</Link>
             </div>
             
-            <div className="pricing-card popular" style={{ background: '#fff', padding: '2rem', borderRadius: '8px', border: '2px solid #0b3c5d', textAlign: 'center', position: 'relative' }}>
-              <div className="popular-badge" style={{ position: 'absolute', top: '-12px', left: '50%', transform: 'translateX(-50%)', background: '#0b3c5d', color: '#fff', padding: '4px 12px', borderRadius: '12px', fontSize: '0.8rem', fontWeight: 'bold' }}>Premium Plan</div>
+            <div className="pricing-card popular" style={{ background: '#fff', padding: '2rem', borderRadius: '8px', border: '2px solid #00539B', textAlign: 'center', position: 'relative' }}>
+              <div className="popular-badge" style={{ position: 'absolute', top: '-12px', left: '50%', transform: 'translateX(-50%)', background: '#00539B', color: '#fff', padding: '4px 12px', borderRadius: '12px', fontSize: '0.8rem', fontWeight: 'bold' }}>Premium Plan</div>
               <h3>Paid Subscription</h3>
               <p className="plan-desc">For growing businesses.</p>
-              <div className="price" style={{ fontSize: '2rem', fontWeight: 'bold', margin: '1rem 0', color: '#0b3c5d' }}><span>LKR 4,500</span>/mo</div>
+              <div className="price" style={{ fontSize: '2rem', fontWeight: 'bold', margin: '1rem 0', color: '#00539B' }}><span>LKR 4,500</span>/mo</div>
               <ul className="plan-features" style={{ listStyle: 'none', padding: 0, margin: '0 0 2rem 0', textAlign: 'left' }}>
                 <li style={{ padding: '0.5rem 0', borderBottom: '1px solid #e2e8f0' }}>✓ All trial features</li>
                 <li style={{ padding: '0.5rem 0', borderBottom: '1px solid #e2e8f0' }}>✓ Priority 24/7 Support</li>

@@ -113,7 +113,7 @@ export default function CybersourceCheckout({ amount }: { amount: string }) {
            <p style={{ color: '#64748b' }}>Loading secure payment fields...</p>
         </div>
         
-        {isProcessing && <div style={{ marginTop: '10px', color: '#0b3c5d', fontWeight: 'bold' }}>Processing payment...</div>}
+        {isProcessing && <div style={{ marginTop: '10px', color: '#00539B', fontWeight: 'bold' }}>Processing payment...</div>}
         
         <button 
           onClick={() => setShowCheckout(false)} 
@@ -137,7 +137,7 @@ export default function CybersourceCheckout({ amount }: { amount: string }) {
       <button 
         onClick={initiateCheckout} 
         className="btn btn-primary"
-        style={{ width: '100%', padding: '12px', fontSize: '1.1rem', backgroundColor: '#0b3c5d', border: 'none', cursor: 'pointer' }}
+        style={{ width: '100%', padding: '12px', fontSize: '1.1rem', backgroundColor: '#00539B', border: 'none', cursor: 'pointer' }}
         disabled={isProcessing}
       >
         {isProcessing ? 'Connecting...' : 'Pay Now Securely'}
