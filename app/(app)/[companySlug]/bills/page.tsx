@@ -22,6 +22,8 @@ export default function BillsPage() {
 
   const [billItems, setBillItems] = useState([{ item_id: '', quantity: 1, unit_price: 0 }]);
 
+  const basePath = '/itmbooks.com';
+
   useEffect(() => {
     fetchBills();
     fetchVendors();
@@ -30,9 +32,9 @@ export default function BillsPage() {
 
   const fetchBills = async () => {
     try {
-      const res = await fetch('/api/bills');
+      const res = await fetch(`${basePath}/api/bills`);
       const data = await res.json();
-      if (res.ok) setBills(data.bills);
+      if (res.ok) setBills(data.bills || []);
     } catch (error) {
       console.error('Failed to fetch bills', error);
     } finally {
@@ -42,9 +44,9 @@ export default function BillsPage() {
 
   const fetchVendors = async () => {
     try {
-      const res = await fetch('/api/vendors');
+      const res = await fetch(`${basePath}/api/vendors`);
       const data = await res.json();
-      if (res.ok) setVendors(data.vendors);
+      if (res.ok) setVendors(data.vendors || []);
     } catch (error) {
       console.error('Failed to fetch vendors', error);
     }
@@ -52,9 +54,9 @@ export default function BillsPage() {
 
   const fetchAvailableItems = async () => {
     try {
-      const res = await fetch('/api/items');
+      const res = await fetch(`${basePath}/api/items`);
       const data = await res.json();
-      if (res.ok) setAvailableItems(data.items);
+      if (res.ok) setAvailableItems(data.items || []);
     } catch (error) {
       console.error('Failed to fetch items', error);
     }
@@ -128,7 +130,7 @@ export default function BillsPage() {
         items: billItems.filter(i => i.item_id !== '')
       };
 
-      const url = '/api/bills';
+      const url = `${basePath}/api/bills`;
       const method = isEditing ? 'PUT' : 'POST';
 
       const res = await fetch(url, {
@@ -156,7 +158,7 @@ export default function BillsPage() {
   const handleDelete = async (id: string) => {
     if (!window.confirm('Are you sure you want to delete this bill?')) return;
     try {
-      const res = await fetch(`/api/bills?id=${id}`, { method: 'DELETE' });
+      const res = await fetch(`${basePath}/api/bills?id=${id}`, { method: 'DELETE' });
       if (res.ok) {
         fetchBills();
       } else {

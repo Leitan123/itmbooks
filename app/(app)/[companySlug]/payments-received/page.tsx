@@ -22,6 +22,8 @@ export default function PaymentsReceivedPage() {
     notes: ''
   });
 
+  const basePath = '/itmbooks.com';
+
   useEffect(() => {
     fetchPayments();
     fetchCustomers();
@@ -30,9 +32,9 @@ export default function PaymentsReceivedPage() {
 
   const fetchPayments = async () => {
     try {
-      const res = await fetch('/api/payments-received');
+      const res = await fetch(`${basePath}/api/payments-received`);
       const data = await res.json();
-      if (res.ok) setPayments(data.payments);
+      if (res.ok) setPayments(data.payments || []);
     } catch (error) {
       console.error('Failed to fetch payments', error);
     } finally {
@@ -42,9 +44,9 @@ export default function PaymentsReceivedPage() {
 
   const fetchCustomers = async () => {
     try {
-      const res = await fetch('/api/customers');
+      const res = await fetch(`${basePath}/api/customers`);
       const data = await res.json();
-      if (res.ok) setCustomers(data.customers);
+      if (res.ok) setCustomers(data.customers || []);
     } catch (error) {
       console.error('Failed to fetch customers', error);
     }
@@ -52,9 +54,9 @@ export default function PaymentsReceivedPage() {
 
   const fetchInvoices = async () => {
     try {
-      const res = await fetch('/api/invoices');
+      const res = await fetch(`${basePath}/api/invoices`);
       const data = await res.json();
-      if (res.ok) setInvoices(data.invoices);
+      if (res.ok) setInvoices(data.invoices || []);
     } catch (error) {
       console.error('Failed to fetch invoices', error);
     }
@@ -92,7 +94,7 @@ export default function PaymentsReceivedPage() {
   const handleSavePayment = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const url = '/api/payments-received';
+      const url = `${basePath}/api/payments-received`;
       const method = isEditing ? 'PUT' : 'POST';
 
       const res = await fetch(url, {
@@ -120,7 +122,7 @@ export default function PaymentsReceivedPage() {
   const handleDelete = async (id: string) => {
     if (!window.confirm('Are you sure you want to delete this payment record?')) return;
     try {
-      const res = await fetch(`/api/payments-received?id=${id}`, { method: 'DELETE' });
+      const res = await fetch(`${basePath}/api/payments-received?id=${id}`, { method: 'DELETE' });
       if (res.ok) {
         fetchPayments();
       } else {

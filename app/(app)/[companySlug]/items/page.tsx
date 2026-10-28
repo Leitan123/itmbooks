@@ -10,16 +10,18 @@ export default function ItemsPage() {
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({ id: '', name: '', description: '', price: '', stock_quantity: '' });
 
+  const basePath = '/itmbooks.com';
+
   useEffect(() => {
     fetchItems();
   }, []);
 
   const fetchItems = async () => {
     try {
-      const res = await fetch('/api/items');
+      const res = await fetch(`${basePath}/api/items`);
       const data = await res.json();
       if (res.ok) {
-        setItems(data.items);
+        setItems(data.items || []);
       }
     } catch (error) {
       console.error('Failed to fetch items', error);
@@ -48,7 +50,7 @@ export default function ItemsPage() {
   const handleSaveItem = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const url = '/api/items';
+      const url = `${basePath}/api/items`;
       const method = isEditing ? 'PUT' : 'POST';
       const res = await fetch(url, {
         method,
@@ -74,7 +76,7 @@ export default function ItemsPage() {
   const handleDelete = async (id: string) => {
     if (!window.confirm('Are you sure you want to delete this item?')) return;
     try {
-      const res = await fetch(`/api/items?id=${id}`, { method: 'DELETE' });
+      const res = await fetch(`${basePath}/api/items?id=${id}`, { method: 'DELETE' });
       if (res.ok) {
         fetchItems();
       } else {

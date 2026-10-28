@@ -10,16 +10,18 @@ export default function VendorsPage() {
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({ id: '', name: '', email: '', phone: '', address: '' });
 
+  const basePath = '/itmbooks.com';
+
   useEffect(() => {
     fetchVendors();
   }, []);
 
   const fetchVendors = async () => {
     try {
-      const res = await fetch('/api/vendors');
+      const res = await fetch(`${basePath}/api/vendors`);
       const data = await res.json();
       if (res.ok) {
-        setVendors(data.vendors);
+        setVendors(data.vendors || []);
       }
     } catch (error) {
       console.error('Failed to fetch vendors', error);
@@ -42,7 +44,7 @@ export default function VendorsPage() {
   const handleSaveVendor = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const url = '/api/vendors';
+      const url = `${basePath}/api/vendors`;
       const method = isEditing ? 'PUT' : 'POST';
       const res = await fetch(url, {
         method,
@@ -68,7 +70,7 @@ export default function VendorsPage() {
   const handleDelete = async (id: string) => {
     if (!window.confirm('Are you sure you want to delete this vendor?')) return;
     try {
-      const res = await fetch(`/api/vendors?id=${id}`, { method: 'DELETE' });
+      const res = await fetch(`${basePath}/api/vendors?id=${id}`, { method: 'DELETE' });
       if (res.ok) {
         fetchVendors();
       } else {

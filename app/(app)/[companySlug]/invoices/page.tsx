@@ -22,6 +22,8 @@ export default function InvoicesPage() {
 
   const [invoiceItems, setInvoiceItems] = useState([{ item_id: '', quantity: 1, unit_price: 0 }]);
 
+  const basePath = '/itmbooks.com';
+
   useEffect(() => {
     fetchInvoices();
     fetchCustomers();
@@ -30,9 +32,9 @@ export default function InvoicesPage() {
 
   const fetchInvoices = async () => {
     try {
-      const res = await fetch('/api/invoices');
+      const res = await fetch(`${basePath}/api/invoices`);
       const data = await res.json();
-      if (res.ok) setInvoices(data.invoices);
+      if (res.ok) setInvoices(data.invoices || []);
     } catch (error) {
       console.error('Failed to fetch invoices', error);
     } finally {
@@ -42,9 +44,9 @@ export default function InvoicesPage() {
 
   const fetchCustomers = async () => {
     try {
-      const res = await fetch('/api/customers');
+      const res = await fetch(`${basePath}/api/customers`);
       const data = await res.json();
-      if (res.ok) setCustomers(data.customers);
+      if (res.ok) setCustomers(data.customers || []);
     } catch (error) {
       console.error('Failed to fetch customers', error);
     }
@@ -52,9 +54,9 @@ export default function InvoicesPage() {
 
   const fetchAvailableItems = async () => {
     try {
-      const res = await fetch('/api/items');
+      const res = await fetch(`${basePath}/api/items`);
       const data = await res.json();
-      if (res.ok) setAvailableItems(data.items);
+      if (res.ok) setAvailableItems(data.items || []);
     } catch (error) {
       console.error('Failed to fetch items', error);
     }
@@ -128,7 +130,7 @@ export default function InvoicesPage() {
         items: invoiceItems.filter(i => i.item_id !== '')
       };
 
-      const url = '/api/invoices';
+      const url = `${basePath}/api/invoices`;
       const method = isEditing ? 'PUT' : 'POST';
 
       const res = await fetch(url, {
@@ -156,7 +158,7 @@ export default function InvoicesPage() {
   const handleDelete = async (id: string) => {
     if (!window.confirm('Are you sure you want to delete this invoice?')) return;
     try {
-      const res = await fetch(`/api/invoices?id=${id}`, { method: 'DELETE' });
+      const res = await fetch(`${basePath}/api/invoices?id=${id}`, { method: 'DELETE' });
       if (res.ok) {
         fetchInvoices();
       } else {
