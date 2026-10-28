@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import '../../table.css';
 import '../../../(marketing)/form.css';
 
@@ -14,9 +15,12 @@ interface AccountOption {
 }
 
 export default function ExpensesPage() {
+  const { data: session } = useSession();
   const params = useParams();
   const companySlug = (params?.companySlug as string) || 'dashboard';
   const basePath = '/itmbooks.com';
+  const rawAccountType = (session?.user as any)?.accountType || 'Invoice';
+  const isInvoiceUser = rawAccountType === 'Invoice';
 
   const [expenses, setExpenses] = useState([]);
   const [expenseAccounts, setExpenseAccounts] = useState<AccountOption[]>([]);
@@ -37,9 +41,28 @@ export default function ExpensesPage() {
   });
 
   useEffect(() => {
-    fetchExpenses();
-    fetchAccounts();
-  }, []);
+    if (!isInvoiceUser) {
+      fetchExpenses();
+      fetchAccounts();
+    } else {
+      setIsLoading(false);
+    }
+  }, [isInvoiceUser]);
+
+  if (session && isInvoiceUser) {
+    return (
+      <div className="page-container" style={{ textAlign: 'center', padding: '60px 20px' }}>
+        <div style={{ fontSize: '3rem', marginBottom: '16px' }}>🔒</div>
+        <h2 style={{ fontSize: '1.5rem', fontWeight: 700, color: '#0f172a' }}>Purchases & Expenses Not Included</h2>
+        <p style={{ color: '#64748b', maxWidth: '520px', margin: '12px auto 24px auto', lineHeight: 1.6 }}>
+          Operating expenses, vendor purchases, and disbursement ledgers are exclusively available on the Full Accounting and Inventory editions. Your workspace is currently on the Invoicing Edition.
+        </p>
+        <Link href={`/${companySlug}`} className="btn btn-primary">
+          Back to Dashboard
+        </Link>
+      </div>
+    );
+  }
 
   const fetchAccounts = async () => {
     try {

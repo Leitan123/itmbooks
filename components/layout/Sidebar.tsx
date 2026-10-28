@@ -33,9 +33,9 @@ export default function Sidebar() {
     { name: 'Invoices', href: `/${companySlug}/invoices`, group: 'Sales', allowed: ['Invoice', 'Inventory', 'Accounting'] },
     { name: 'Payments Received', href: `/${companySlug}/payments-received`, group: 'Sales', allowed: ['Invoice', 'Inventory', 'Accounting'] },
     
-    // Purchases & Expenses
+    // Purchases & Expenses (Not available for Invoice edition)
     { name: 'Vendors', href: `/${companySlug}/vendors`, group: 'Purchases', allowed: ['Inventory', 'Accounting'] },
-    { name: 'Expenses', href: `/${companySlug}/expenses`, group: 'Purchases', allowed: ['Invoice', 'Inventory', 'Accounting'] },
+    { name: 'Expenses', href: `/${companySlug}/expenses`, group: 'Purchases', allowed: ['Inventory', 'Accounting'] },
     { name: 'Bills', href: `/${companySlug}/bills`, group: 'Purchases', allowed: ['Inventory', 'Accounting'] },
   ];
 
