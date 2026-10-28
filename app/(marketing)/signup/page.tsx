@@ -107,7 +107,7 @@ export default function SignupPage() {
               <label className="form-label">Select Product</label>
               <select name="accountType" className="form-input" required value={formData.accountType} onChange={handleChange}>
                 <option value="Invoice">Invoicing (Sales & Billing)</option>
-                <option value="Accounts">Accounting (Journals & Ledgers)</option>
+                <option value="Accounting">Accounting (Journals & Ledgers)</option>
                 <option value="Inventory">Inventory (Purchases & Stock)</option>
               </select>
             </div>

@@ -9,23 +9,34 @@ export default function Sidebar() {
   const params = useParams();
   const { data: session } = useSession();
   const companySlug = (params?.companySlug as string) || 'dashboard';
-  const accountType = (session?.user as any)?.accountType || 'Invoice';
+  const rawAccountType = (session?.user as any)?.accountType || 'Invoice';
+  
+  // Normalize account type: treat both 'Accounts' and 'Accounting' as Accounting
+  const accountType = (rawAccountType === 'Accounts' || rawAccountType === 'Accounting') ? 'Accounting' : rawAccountType;
 
   const allLinks = [
-    { name: 'Dashboard', href: `/${companySlug}`, group: 'Overview', allowed: ['Invoice', 'Accounts', 'Inventory'] },
-    { name: 'Reports', href: `/${companySlug}/reports`, group: 'Overview', allowed: ['Invoice', 'Accounts', 'Inventory'] },
+    { name: 'Dashboard', href: `/${companySlug}`, group: 'Overview', allowed: ['Invoice', 'Accounting', 'Inventory'] },
+    { name: 'Reports', href: `/${companySlug}/reports`, group: 'Overview', allowed: ['Invoice', 'Accounting', 'Inventory'] },
     
-    { name: 'Customers', href: `/${companySlug}/customers`, group: 'Sales', allowed: ['Invoice', 'Inventory', 'Accounts'] },
-    { name: 'Items & Services', href: `/${companySlug}/items`, group: 'Sales', allowed: ['Invoice', 'Inventory', 'Accounts'] },
-    { name: 'Invoices', href: `/${companySlug}/invoices`, group: 'Sales', allowed: ['Invoice', 'Inventory', 'Accounts'] },
-    { name: 'Payments Received', href: `/${companySlug}/payments-received`, group: 'Sales', allowed: ['Invoice', 'Inventory', 'Accounts'] },
+    // Accounting Core
+    { name: 'Chart of Accounts', href: `/${companySlug}/chart-of-accounts`, group: 'Accounting', allowed: ['Accounting'] },
+    { name: 'Manual Journals', href: `/${companySlug}/manual-journals`, group: 'Accounting', allowed: ['Accounting'] },
+    { name: 'General Ledger', href: `/${companySlug}/general-ledger`, group: 'Accounting', allowed: ['Accounting'] },
+    { name: 'Trial Balance', href: `/${companySlug}/trial-balance`, group: 'Accounting', allowed: ['Accounting'] },
+    { name: 'Profit & Loss', href: `/${companySlug}/profit-loss`, group: 'Accounting', allowed: ['Accounting'] },
+    { name: 'Balance Sheet', href: `/${companySlug}/balance-sheet`, group: 'Accounting', allowed: ['Accounting'] },
+    { name: 'Bank & Cash', href: `/${companySlug}/banking`, group: 'Accounting', allowed: ['Accounting'] },
+
+    // Sales & Revenue
+    { name: 'Customers', href: `/${companySlug}/customers`, group: 'Sales', allowed: ['Invoice', 'Inventory', 'Accounting'] },
+    { name: 'Items & Services', href: `/${companySlug}/items`, group: 'Sales', allowed: ['Invoice', 'Inventory', 'Accounting'] },
+    { name: 'Invoices', href: `/${companySlug}/invoices`, group: 'Sales', allowed: ['Invoice', 'Inventory', 'Accounting'] },
+    { name: 'Payments Received', href: `/${companySlug}/payments-received`, group: 'Sales', allowed: ['Invoice', 'Inventory', 'Accounting'] },
     
-    { name: 'Vendors', href: `/${companySlug}/vendors`, group: 'Purchases', allowed: ['Inventory', 'Accounts'] },
-    { name: 'Expenses', href: `/${companySlug}/expenses`, group: 'Purchases', allowed: ['Invoice', 'Inventory', 'Accounts'] },
-    { name: 'Bills', href: `/${companySlug}/bills`, group: 'Purchases', allowed: ['Inventory', 'Accounts'] },
-    
-    { name: 'Chart of Accounts', href: `/${companySlug}/chart-of-accounts`, group: 'Accounting', allowed: ['Accounts'] },
-    { name: 'Manual Journals', href: `/${companySlug}/manual-journals`, group: 'Accounting', allowed: ['Accounts'] },
+    // Purchases & Expenses (Not available for Invoice edition)
+    { name: 'Vendors', href: `/${companySlug}/vendors`, group: 'Purchases', allowed: ['Inventory', 'Accounting'] },
+    { name: 'Expenses', href: `/${companySlug}/expenses`, group: 'Purchases', allowed: ['Inventory', 'Accounting'] },
+    { name: 'Bills', href: `/${companySlug}/bills`, group: 'Purchases', allowed: ['Inventory', 'Accounting'] },
   ];
 
   const links = allLinks.filter(link => link.allowed.includes(accountType));
@@ -39,10 +50,15 @@ export default function Sidebar() {
   return (
     <aside className="dashboard-sidebar">
       <div className="sidebar-header">
-        <Link href={`/${companySlug}`} className="sidebar-logo">
-          <span className="logo-dot" aria-hidden="true" />
-          <span className="logo-itm">ITM</span> <span className="logo-books">BOOKS</span>
-        </Link>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <Link href={`/${companySlug}`} className="sidebar-logo">
+            <span className="logo-dot" aria-hidden="true" />
+            <span className="logo-itm">ITM</span> <span className="logo-books">BOOKS</span>
+          </Link>
+          <div style={{ fontSize: '11px', color: 'var(--text-light)', textTransform: 'uppercase', letterSpacing: '0.05em', marginTop: '2px' }}>
+            {accountType === 'Accounting' ? 'Full Accounting Edition' : accountType === 'Inventory' ? 'Inventory Edition' : 'Invoicing Edition'}
+          </div>
+        </div>
       </div>
       
       <nav className="sidebar-nav">

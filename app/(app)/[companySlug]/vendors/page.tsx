@@ -1,25 +1,55 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useSession } from 'next-auth/react';
+import { useParams } from 'next/navigation';
+import Link from 'next/link';
 import '../../table.css';
 
 export default function VendorsPage() {
+  const { data: session } = useSession();
+  const params = useParams();
+  const companySlug = (params?.companySlug as string) || 'dashboard';
+  const rawAccountType = (session?.user as any)?.accountType || 'Invoice';
+  const isInvoiceUser = rawAccountType === 'Invoice';
+
   const [vendors, setVendors] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({ id: '', name: '', email: '', phone: '', address: '' });
 
+  const basePath = '/itmbooks.com';
+
   useEffect(() => {
-    fetchVendors();
-  }, []);
+    if (!isInvoiceUser) {
+      fetchVendors();
+    } else {
+      setIsLoading(false);
+    }
+  }, [isInvoiceUser]);
+
+  if (session && isInvoiceUser) {
+    return (
+      <div className="page-container" style={{ textAlign: 'center', padding: '60px 20px' }}>
+        <div style={{ fontSize: '3rem', marginBottom: '16px' }}>🔒</div>
+        <h2 style={{ fontSize: '1.5rem', fontWeight: 700, color: '#0f172a' }}>Purchases & Vendors Not Included</h2>
+        <p style={{ color: '#64748b', maxWidth: '520px', margin: '12px auto 24px auto', lineHeight: 1.6 }}>
+          Vendor management and supplier purchases are exclusively available on the Full Accounting and Inventory editions. Your workspace is currently on the Invoicing Edition.
+        </p>
+        <Link href={`/${companySlug}`} className="btn btn-primary">
+          Back to Dashboard
+        </Link>
+      </div>
+    );
+  }
 
   const fetchVendors = async () => {
     try {
-      const res = await fetch('/api/vendors');
+      const res = await fetch(`${basePath}/api/vendors`);
       const data = await res.json();
       if (res.ok) {
-        setVendors(data.vendors);
+        setVendors(data.vendors || []);
       }
     } catch (error) {
       console.error('Failed to fetch vendors', error);
@@ -42,7 +72,7 @@ export default function VendorsPage() {
   const handleSaveVendor = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const url = '/api/vendors';
+      const url = `${basePath}/api/vendors`;
       const method = isEditing ? 'PUT' : 'POST';
       const res = await fetch(url, {
         method,
@@ -68,7 +98,7 @@ export default function VendorsPage() {
   const handleDelete = async (id: string) => {
     if (!window.confirm('Are you sure you want to delete this vendor?')) return;
     try {
-      const res = await fetch(`/api/vendors?id=${id}`, { method: 'DELETE' });
+      const res = await fetch(`${basePath}/api/vendors?id=${id}`, { method: 'DELETE' });
       if (res.ok) {
         fetchVendors();
       } else {

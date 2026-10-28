@@ -47,6 +47,13 @@ export async function POST(request: Request) {
         [tenantId, 1, 'trialing', formattedExpiry]
       );
 
+      // If registered with Accounting/Accounts, seed their Chart of Accounts
+      const normalizedAccountType = (accountType === 'Accounts' || accountType === 'Accounting') ? 'Accounting' : accountType;
+      if (normalizedAccountType === 'Accounting') {
+        const { ensureTenantAccounts } = await import('../../../lib/accounting');
+        await ensureTenantAccounts(tenantId);
+      }
+
       // Send the email notification to admin with login details
       await sendAdminNotification(
         'itmartx@gmail.com',

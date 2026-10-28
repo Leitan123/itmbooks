@@ -10,16 +10,18 @@ export default function CustomersPage() {
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({ id: '', name: '', email: '', phone: '', address: '' });
 
+  const basePath = '/itmbooks.com';
+
   useEffect(() => {
     fetchCustomers();
   }, []);
 
   const fetchCustomers = async () => {
     try {
-      const res = await fetch('/api/customers');
+      const res = await fetch(`${basePath}/api/customers`);
       const data = await res.json();
       if (res.ok) {
-        setCustomers(data.customers);
+        setCustomers(data.customers || []);
       }
     } catch (error) {
       console.error('Failed to fetch customers', error);
@@ -42,7 +44,7 @@ export default function CustomersPage() {
   const handleSaveCustomer = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const url = '/api/customers';
+      const url = `${basePath}/api/customers`;
       const method = isEditing ? 'PUT' : 'POST';
       const res = await fetch(url, {
         method,
@@ -68,7 +70,7 @@ export default function CustomersPage() {
   const handleDelete = async (id: string) => {
     if (!window.confirm('Are you sure you want to delete this customer?')) return;
     try {
-      const res = await fetch(`/api/customers?id=${id}`, { method: 'DELETE' });
+      const res = await fetch(`${basePath}/api/customers?id=${id}`, { method: 'DELETE' });
       if (res.ok) {
         fetchCustomers();
       } else {

@@ -1,9 +1,18 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useSession } from 'next-auth/react';
+import { useParams } from 'next/navigation';
+import Link from 'next/link';
 import '../../table.css';
 
 export default function BillsPage() {
+  const { data: session } = useSession();
+  const params = useParams();
+  const companySlug = (params?.companySlug as string) || 'dashboard';
+  const rawAccountType = (session?.user as any)?.accountType || 'Invoice';
+  const isInvoiceUser = rawAccountType === 'Invoice';
+
   const [bills, setBills] = useState([]);
   const [vendors, setVendors] = useState([]);
   const [availableItems, setAvailableItems] = useState([]);
@@ -22,17 +31,38 @@ export default function BillsPage() {
 
   const [billItems, setBillItems] = useState([{ item_id: '', quantity: 1, unit_price: 0 }]);
 
+  const basePath = '/itmbooks.com';
+
   useEffect(() => {
-    fetchBills();
-    fetchVendors();
-    fetchAvailableItems();
-  }, []);
+    if (!isInvoiceUser) {
+      fetchBills();
+      fetchVendors();
+      fetchAvailableItems();
+    } else {
+      setIsLoading(false);
+    }
+  }, [isInvoiceUser]);
+
+  if (session && isInvoiceUser) {
+    return (
+      <div className="page-container" style={{ textAlign: 'center', padding: '60px 20px' }}>
+        <div style={{ fontSize: '3rem', marginBottom: '16px' }}>🔒</div>
+        <h2 style={{ fontSize: '1.5rem', fontWeight: 700, color: '#0f172a' }}>Purchases & Bills Not Included</h2>
+        <p style={{ color: '#64748b', maxWidth: '520px', margin: '12px auto 24px auto', lineHeight: 1.6 }}>
+          Vendor management and purchase bills are exclusively available on the Full Accounting and Inventory editions. Your workspace is currently on the Invoicing Edition.
+        </p>
+        <Link href={`/${companySlug}`} className="btn btn-primary">
+          Back to Dashboard
+        </Link>
+      </div>
+    );
+  }
 
   const fetchBills = async () => {
     try {
-      const res = await fetch('/api/bills');
+      const res = await fetch(`${basePath}/api/bills`);
       const data = await res.json();
-      if (res.ok) setBills(data.bills);
+      if (res.ok) setBills(data.bills || []);
     } catch (error) {
       console.error('Failed to fetch bills', error);
     } finally {
@@ -42,9 +72,9 @@ export default function BillsPage() {
 
   const fetchVendors = async () => {
     try {
-      const res = await fetch('/api/vendors');
+      const res = await fetch(`${basePath}/api/vendors`);
       const data = await res.json();
-      if (res.ok) setVendors(data.vendors);
+      if (res.ok) setVendors(data.vendors || []);
     } catch (error) {
       console.error('Failed to fetch vendors', error);
     }
@@ -52,9 +82,9 @@ export default function BillsPage() {
 
   const fetchAvailableItems = async () => {
     try {
-      const res = await fetch('/api/items');
+      const res = await fetch(`${basePath}/api/items`);
       const data = await res.json();
-      if (res.ok) setAvailableItems(data.items);
+      if (res.ok) setAvailableItems(data.items || []);
     } catch (error) {
       console.error('Failed to fetch items', error);
     }
@@ -128,7 +158,7 @@ export default function BillsPage() {
         items: billItems.filter(i => i.item_id !== '')
       };
 
-      const url = '/api/bills';
+      const url = `${basePath}/api/bills`;
       const method = isEditing ? 'PUT' : 'POST';
 
       const res = await fetch(url, {
@@ -156,7 +186,7 @@ export default function BillsPage() {
   const handleDelete = async (id: string) => {
     if (!window.confirm('Are you sure you want to delete this bill?')) return;
     try {
-      const res = await fetch(`/api/bills?id=${id}`, { method: 'DELETE' });
+      const res = await fetch(`${basePath}/api/bills?id=${id}`, { method: 'DELETE' });
       if (res.ok) {
         fetchBills();
       } else {
