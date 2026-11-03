@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Sidebar from '../../../components/layout/Sidebar';
+import DashboardTopNav from '../../../components/layout/DashboardTopNav';
 import '../../dashboard.css';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../../api/auth/[...nextauth]/route';
@@ -11,9 +12,14 @@ export const metadata: Metadata = {
 
 export default async function DashboardLayout({
   children,
+  params,
 }: {
   children: React.ReactNode;
+  params: Promise<{ companySlug: string }> | { companySlug: string };
 }) {
+  const resolvedParams = await params;
+  const companySlug = resolvedParams?.companySlug || 'dashboard';
+
   const session = await getServerSession(authOptions);
   let companyName = "Company Name";
   let themeColor = null;
@@ -30,6 +36,9 @@ export default async function DashboardLayout({
       console.error("Error fetching tenant details in layout:", e);
     }
   }
+
+  const rawAccountType = (session?.user as any)?.accountType || 'Invoice';
+  const accountType = (rawAccountType === 'Accounts' || rawAccountType === 'Accounting') ? 'Accounting' : rawAccountType;
 
   // Get initials for avatar
   const initials = companyName
@@ -55,21 +64,18 @@ export default async function DashboardLayout({
         {/* Main Content Area */}
         <main className="dashboard-main">
           
-          {/* Topbar */}
+          {/* Topbar with functioning search, popovers, and user dropdown */}
           <header className="dashboard-topbar">
-            <div className="search-bar">
-              <input type="text" placeholder="Search in ITM Books..." className="search-input" />
-            </div>
-            
-            <div className="topbar-actions">
-              <div className="org-selector">
-                {companyName} ▾
-              </div>
-              <div className="user-avatar">
-                {initials}
-              </div>
-            </div>
+            <DashboardTopNav
+              companyName={companyName}
+              initials={initials}
+              userName={session?.user?.name || companyName}
+              userEmail={session?.user?.email || ''}
+              companySlug={companySlug}
+              accountType={accountType}
+            />
           </header>
+
 
           {/* Content Container */}
           <div className="dashboard-content">

@@ -248,6 +248,79 @@ CREATE TABLE IF NOT EXISTS `saas_payments` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------------------------------------
+-- 13a. SaaS Quotations (Estimates)
+-- ----------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `saas_quotations` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `tenant_id` INT NOT NULL,
+  `customer_id` INT NOT NULL,
+  `quotation_number` VARCHAR(100) NOT NULL,
+  `date` DATE NOT NULL,
+  `expiry_date` DATE NOT NULL,
+  `total_amount` DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+  `status` VARCHAR(50) NOT NULL DEFAULT 'Draft',
+  `notes` TEXT DEFAULT NULL,
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  INDEX `idx_saas_quotations_tenant` (`tenant_id`),
+  INDEX `idx_saas_quotations_customer` (`customer_id`),
+  CONSTRAINT `fk_saas_quotations_tenant` FOREIGN KEY (`tenant_id`) REFERENCES `tenants` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_saas_quotations_customer` FOREIGN KEY (`customer_id`) REFERENCES `saas_customers` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `saas_quotation_items` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `quotation_id` INT NOT NULL,
+  `item_id` INT DEFAULT NULL,
+  `quantity` DECIMAL(10,2) NOT NULL DEFAULT 1.00,
+  `unit_price` DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+  `total` DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+  PRIMARY KEY (`id`),
+  INDEX `idx_saas_quot_items_quotation` (`quotation_id`),
+  INDEX `idx_saas_quot_items_item` (`item_id`),
+  CONSTRAINT `fk_saas_quot_items_quotation` FOREIGN KEY (`quotation_id`) REFERENCES `saas_quotations` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_saas_quot_items_item` FOREIGN KEY (`item_id`) REFERENCES `saas_items` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ----------------------------------------------------------
+-- 13b. SaaS Sales Returns (Credit Notes)
+-- ----------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `saas_sales_returns` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `tenant_id` INT NOT NULL,
+  `customer_id` INT NOT NULL,
+  `invoice_id` INT DEFAULT NULL,
+  `return_number` VARCHAR(100) NOT NULL,
+  `date` DATE NOT NULL,
+  `total_amount` DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+  `status` VARCHAR(50) NOT NULL DEFAULT 'Pending',
+  `reason` VARCHAR(255) DEFAULT NULL,
+  `notes` TEXT DEFAULT NULL,
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  INDEX `idx_saas_sr_tenant` (`tenant_id`),
+  INDEX `idx_saas_sr_customer` (`customer_id`),
+  CONSTRAINT `fk_saas_sr_tenant` FOREIGN KEY (`tenant_id`) REFERENCES `tenants` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_saas_sr_customer` FOREIGN KEY (`customer_id`) REFERENCES `saas_customers` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `saas_sales_return_items` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `sales_return_id` INT NOT NULL,
+  `item_id` INT DEFAULT NULL,
+  `quantity` DECIMAL(10,2) NOT NULL DEFAULT 1.00,
+  `unit_price` DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+  `total` DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+  PRIMARY KEY (`id`),
+  INDEX `idx_saas_sri_return` (`sales_return_id`),
+  INDEX `idx_saas_sri_item` (`item_id`),
+  CONSTRAINT `fk_saas_sri_return` FOREIGN KEY (`sales_return_id`) REFERENCES `saas_sales_returns` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_saas_sri_item` FOREIGN KEY (`item_id`) REFERENCES `saas_items` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ----------------------------------------------------------
 -- 14. Accounting Engine: Account Types
 -- ----------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `account_types` (

@@ -82,7 +82,7 @@
   color: var(--brand-navy);
 }
 .sidebar-link.active {
-  box-shadow: inset 3px 0 0 var(--brand-green);
+  box-shadow: inset 3px 0 0 var(--brand-blue);
   font-weight: 600;
 }
 .sidebar-footer {

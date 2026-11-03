@@ -18,7 +18,8 @@ export default function Sidebar() {
     { name: 'Dashboard', href: `/${companySlug}`, group: 'Overview', allowed: ['Invoice', 'Accounting', 'Inventory'] },
     { name: 'Reports', href: `/${companySlug}/reports`, group: 'Overview', allowed: ['Invoice', 'Accounting', 'Inventory'] },
     
-    // Accounting Core
+    // Accounting Core (Only available for Accounting edition)
+    { name: 'Accounting Dashboard', href: `/${companySlug}/accounting`, group: 'Accounting', allowed: ['Accounting'] },
     { name: 'Chart of Accounts', href: `/${companySlug}/chart-of-accounts`, group: 'Accounting', allowed: ['Accounting'] },
     { name: 'Manual Journals', href: `/${companySlug}/manual-journals`, group: 'Accounting', allowed: ['Accounting'] },
     { name: 'General Ledger', href: `/${companySlug}/general-ledger`, group: 'Accounting', allowed: ['Accounting'] },
@@ -30,6 +31,7 @@ export default function Sidebar() {
     // Sales & Revenue
     { name: 'Customers', href: `/${companySlug}/customers`, group: 'Sales', allowed: ['Invoice', 'Inventory', 'Accounting'] },
     { name: 'Items & Services', href: `/${companySlug}/items`, group: 'Sales', allowed: ['Invoice', 'Inventory', 'Accounting'] },
+    { name: 'Quotations', href: `/${companySlug}/quotations`, group: 'Sales', allowed: ['Invoice', 'Inventory', 'Accounting'] },
     { name: 'Invoices', href: `/${companySlug}/invoices`, group: 'Sales', allowed: ['Invoice', 'Inventory', 'Accounting'] },
     { name: 'Payments Received', href: `/${companySlug}/payments-received`, group: 'Sales', allowed: ['Invoice', 'Inventory', 'Accounting'] },
     

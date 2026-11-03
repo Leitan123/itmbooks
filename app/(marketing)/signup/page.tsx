@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { signIn } from 'next-auth/react';
+import { FcGoogle } from 'react-icons/fc';
 import '../form.css';
 
 export default function SignupPage() {
@@ -18,7 +20,19 @@ export default function SignupPage() {
     accountType: 'Invoice'
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [error, setError] = useState('');
+
+  const handleGoogleSignup = async () => {
+    setIsGoogleLoading(true);
+    setError('');
+    try {
+      await signIn('google', { callbackUrl: '/dashboard' });
+    } catch (err) {
+      setIsGoogleLoading(false);
+      setError('Could not connect to Google authentication.');
+    }
+  };
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -57,7 +71,24 @@ export default function SignupPage() {
         <h1 className="auth-title">Start your 14-day free trial</h1>
         <p className="auth-subtitle">Create your account to get started.</p>
 
-        {error && <div style={{ color: '#ef4444', backgroundColor: '#fef2f2', padding: '10px', borderRadius: '6px', marginBottom: '1rem', fontSize: '14px', border: '1px solid #fee2e2' }}>{error}</div>}
+        {error && <div className="auth-alert auth-alert-error">{error}</div>}
+
+        {/* Google Authentication */}
+        <div className="auth-oauth-container">
+          <button
+            type="button"
+            className="btn-google"
+            onClick={handleGoogleSignup}
+            disabled={isLoading || isGoogleLoading}
+          >
+            <FcGoogle size={20} />
+            <span>{isGoogleLoading ? 'Connecting to Google...' : 'Sign up with Google'}</span>
+          </button>
+
+          <div className="auth-divider">
+            <span>or register with email</span>
+          </div>
+        </div>
 
         <form className="auth-form" onSubmit={handleSignup}>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
@@ -117,7 +148,7 @@ export default function SignupPage() {
             </div>
           </div>
 
-          <button type="submit" className="btn btn-primary btn-block" disabled={isLoading}>
+          <button type="submit" className="btn btn-primary btn-block" disabled={isLoading || isGoogleLoading}>
             {isLoading ? 'Creating Account...' : 'Create Account & Continue to Payment'}
           </button>
         </form>
