@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import '../dashboard.css';
+import ExitAdminButton from './ExitAdminButton';
 
 export default function AdminLayout({
   children,
@@ -26,9 +27,7 @@ export default function AdminLayout({
           </nav>
           
           <div className="sidebar-footer" style={{ borderTop: '1px solid #0B3E6B' }}>
-            <Link href="/login" className="sidebar-link" style={{ color: '#cbd5e1' }}>
-              &larr; Exit Admin
-            </Link>
+            <ExitAdminButton />
           </div>
         </aside>
 

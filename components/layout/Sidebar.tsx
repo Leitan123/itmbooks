@@ -97,7 +97,7 @@ export default function Sidebar() {
           Settings
         </Link>
         <button 
-          onClick={() => signOut({ callbackUrl: '/itmbooks.com' })}
+          onClick={() => signOut({ callbackUrl: '/itmbooks.com/login' })}
           className="sidebar-link" 
           style={{ width: '100%', textAlign: 'left', background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', marginTop: '0.5rem' }}
         >

@@ -536,7 +536,7 @@ export default function DashboardTopNav({
                 className="dashboard-user-menu-item signout-item"
                 onClick={() => {
                   setUserMenuOpen(false);
-                  signOut({ callbackUrl: '/itmbooks.com' });
+                  signOut({ callbackUrl: '/itmbooks.com/login' });
                 }}
               >
                 <span>🚪</span> Sign Out
