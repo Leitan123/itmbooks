@@ -23,6 +23,7 @@ interface Journal {
 }
 
 export default function ManualJournalsClient({ initialJournals, companySlug }: { initialJournals: Journal[], companySlug: string }) {
+  const { format: formatMoney } = useCurrency();
   const [journals] = useState<Journal[]>(initialJournals);
   const [searchTerm, setSearchTerm] = useState('');
   const [expandedId, setExpandedId] = useState<number | null>(null);
@@ -72,7 +73,7 @@ export default function ManualJournalsClient({ initialJournals, companySlug }: {
         <div className="card" style={{ padding: '16px', borderLeft: '4px solid #10b981' }}>
           <div style={{ fontSize: '0.75rem', fontWeight: 600, color: '#64748b', textTransform: 'uppercase' }}>Total Debits / Credits</div>
           <div style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0f172a', marginTop: '4px' }}>
-            ${totalPostedAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            {formatMoney(totalPostedAmount)}
           </div>
         </div>
         <div className="card" style={{ padding: '16px', borderLeft: '4px solid #8b5cf6' }}>
@@ -136,7 +137,7 @@ export default function ManualJournalsClient({ initialJournals, companySlug }: {
                         {journal.notes || <span style={{ color: '#94a3b8', fontStyle: 'italic' }}>No notes provided</span>}
                       </td>
                       <td style={{ padding: '14px 16px', textAlign: 'right', fontWeight: '700', color: '#0f172a' }}>
-                        ${Number(journal.total).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                        {formatMoney(Number(journal.total))}
                       </td>
                       <td style={{ padding: '14px 16px', textAlign: 'center' }}>
                         <span style={{ 
@@ -202,3 +203,4 @@ export default function ManualJournalsClient({ initialJournals, companySlug }: {
 }
 
 import React from 'react';
+import { useCurrency } from '../../../../components/CurrencyProvider';

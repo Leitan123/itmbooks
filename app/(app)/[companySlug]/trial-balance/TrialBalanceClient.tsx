@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useCurrency } from '../../../../components/CurrencyProvider';
 
 interface TrialBalanceRecord {
   id: number;
@@ -33,6 +34,7 @@ export default function TrialBalanceClient({
   basePath: string, 
   companySlug: string 
 }) {
+  const { format: formatMoney } = useCurrency();
   const [data, setData] = useState<TrialBalanceData>(initialData);
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState(new Date().toISOString().split('T')[0]);
@@ -141,14 +143,14 @@ export default function TrialBalanceClient({
             <div style={{ fontSize: '0.85rem', color: data.isBalanced ? '#15803d' : '#b91c1c' }}>
               {data.isBalanced 
                 ? 'All general ledger debits and credits match perfectly with zero discrepancy.' 
-                : `Difference of $${data.difference.toFixed(2)} detected. Review recent journal entries.`}
+                : `Difference of ${formatMoney(data.difference)} detected. Review recent journal entries.`}
             </div>
           </div>
         </div>
         <div style={{ textAlign: 'right' }}>
           <div style={{ fontSize: '0.75rem', fontWeight: 600, color: '#64748b', textTransform: 'uppercase' }}>Discrepancy</div>
           <div style={{ fontSize: '1.25rem', fontWeight: 700, color: data.isBalanced ? '#166534' : '#dc2626' }}>
-            ${data.difference.toFixed(2)}
+            {formatMoney(data.difference)}
           </div>
         </div>
       </div>
@@ -213,10 +215,10 @@ export default function TrialBalanceClient({
                 TOTAL EQUILIBRIUM:
               </td>
               <td style={{ padding: '16px', textAlign: 'right', color: '#166534', borderBottom: '3px double #166534' }}>
-                ${data.totalDebit.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                {formatMoney(data.totalDebit)}
               </td>
               <td style={{ padding: '16px', textAlign: 'right', color: '#166534', borderBottom: '3px double #166534' }}>
-                ${data.totalCredit.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                {formatMoney(data.totalCredit)}
               </td>
             </tr>
           </tfoot>

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useCurrency } from '../../../../components/CurrencyProvider';
 
 interface LedgerTransaction {
   id: number;
@@ -43,6 +44,7 @@ export default function GeneralLedgerClient({
   companySlug: string,
   initialAccountId?: number
 }) {
+  const { format: formatMoney } = useCurrency();
   const [ledger, setLedger] = useState<LedgerAccountBlock[]>(initialLedger);
   const [selectedAccount, setSelectedAccount] = useState<string>(initialAccountId ? initialAccountId.toString() : '');
   const [fromDate, setFromDate] = useState('');
@@ -179,12 +181,12 @@ export default function GeneralLedgerClient({
                 <div style={{ display: 'flex', gap: '24px', fontSize: '0.85rem' }}>
                   <div>
                     <span style={{ color: '#64748b' }}>Opening Balance: </span>
-                    <strong style={{ color: '#0f172a' }}>${block.account.openingBalance.toFixed(2)}</strong>
+                    <strong style={{ color: '#0f172a' }}>{formatMoney(block.account.openingBalance)}</strong>
                   </div>
                   <div>
                     <span style={{ color: '#64748b' }}>Closing Balance: </span>
                     <strong style={{ color: block.account.closingBalance < 0 ? '#dc2626' : '#166534' }}>
-                      ${block.account.closingBalance.toFixed(2)}
+                      {formatMoney(block.account.closingBalance)}
                     </strong>
                   </div>
                 </div>
@@ -222,7 +224,7 @@ export default function GeneralLedgerClient({
                           {tx.credit > 0 ? tx.credit.toFixed(2) : '-'}
                         </td>
                         <td style={{ padding: '10px 16px', textAlign: 'right', fontWeight: 700, color: '#0f172a' }}>
-                          ${tx.runningBalance.toFixed(2)}
+                          {formatMoney(tx.runningBalance)}
                         </td>
                       </tr>
                     ))
@@ -232,9 +234,9 @@ export default function GeneralLedgerClient({
                   <tfoot>
                     <tr style={{ backgroundColor: '#f8fafc', borderTop: '1px solid #cbd5e1', fontWeight: 700 }}>
                       <td colSpan={3} style={{ padding: '10px 16px', textAlign: 'right', color: '#475569' }}>Period Total:</td>
-                      <td style={{ padding: '10px 16px', textAlign: 'right', color: '#10b981' }}>${block.totalDebit.toFixed(2)}</td>
-                      <td style={{ padding: '10px 16px', textAlign: 'right', color: '#f97316' }}>${block.totalCredit.toFixed(2)}</td>
-                      <td style={{ padding: '10px 16px', textAlign: 'right', color: '#0f172a' }}>${block.account.closingBalance.toFixed(2)}</td>
+                      <td style={{ padding: '10px 16px', textAlign: 'right', color: '#10b981' }}>{formatMoney(block.totalDebit)}</td>
+                      <td style={{ padding: '10px 16px', textAlign: 'right', color: '#f97316' }}>{formatMoney(block.totalCredit)}</td>
+                      <td style={{ padding: '10px 16px', textAlign: 'right', color: '#0f172a' }}>{formatMoney(block.account.closingBalance)}</td>
                     </tr>
                   </tfoot>
                 )}

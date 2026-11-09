@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import '../../../(marketing)/form.css';
+import { useCurrency } from '../../../../components/CurrencyProvider';
 
 type Account = {
   id: number;
@@ -16,6 +17,7 @@ type Account = {
 };
 
 export default function AccountsClient({ initialAccounts, basePath, companySlug }: { initialAccounts: Account[], basePath: string, companySlug: string }) {
+  const { format: formatMoney } = useCurrency();
   const router = useRouter();
   const [accounts, setAccounts] = useState<Account[]>(initialAccounts);
   const [selectedType, setSelectedType] = useState<number | 'all'>('all');
@@ -113,31 +115,31 @@ export default function AccountsClient({ initialAccounts, basePath, companySlug 
         <div className="card" style={{ padding: '16px', borderLeft: '4px solid #10b981' }}>
           <div style={{ fontSize: '0.75rem', fontWeight: 600, color: '#64748b', textTransform: 'uppercase' }}>Assets</div>
           <div style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0f172a', marginTop: '4px' }}>
-            ${totalAssets.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            {formatMoney(totalAssets)}
           </div>
         </div>
         <div className="card" style={{ padding: '16px', borderLeft: '4px solid #f97316' }}>
           <div style={{ fontSize: '0.75rem', fontWeight: 600, color: '#64748b', textTransform: 'uppercase' }}>Liabilities</div>
           <div style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0f172a', marginTop: '4px' }}>
-            ${totalLiabilities.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            {formatMoney(totalLiabilities)}
           </div>
         </div>
         <div className="card" style={{ padding: '16px', borderLeft: '4px solid #8b5cf6' }}>
           <div style={{ fontSize: '0.75rem', fontWeight: 600, color: '#64748b', textTransform: 'uppercase' }}>Equity</div>
           <div style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0f172a', marginTop: '4px' }}>
-            ${totalEquity.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            {formatMoney(totalEquity)}
           </div>
         </div>
         <div className="card" style={{ padding: '16px', borderLeft: '4px solid #3b82f6' }}>
           <div style={{ fontSize: '0.75rem', fontWeight: 600, color: '#64748b', textTransform: 'uppercase' }}>Revenue</div>
           <div style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0f172a', marginTop: '4px' }}>
-            ${totalIncome.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            {formatMoney(totalIncome)}
           </div>
         </div>
         <div className="card" style={{ padding: '16px', borderLeft: '4px solid #ec4899' }}>
           <div style={{ fontSize: '0.75rem', fontWeight: 600, color: '#64748b', textTransform: 'uppercase' }}>Expenses</div>
           <div style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0f172a', marginTop: '4px' }}>
-            ${totalExpenses.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            {formatMoney(totalExpenses)}
           </div>
         </div>
       </div>
@@ -228,7 +230,7 @@ export default function AccountsClient({ initialAccounts, basePath, companySlug 
                       </span>
                     </td>
                     <td style={{ padding: '14px 16px', textAlign: 'right', fontWeight: '600', color: bal < 0 ? '#dc2626' : '#0f172a' }}>
-                      ${bal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                      {formatMoney(bal)}
                     </td>
                     <td style={{ padding: '14px 16px', textAlign: 'center' }}>
                       <Link 

@@ -9,6 +9,8 @@ import {
   getBalanceSheetData,
   getTrialBalanceData,
 } from "../../../../lib/accounting";
+import { getTenantCurrency } from "../../../../lib/tenant-currency";
+import { formatMoney } from "../../../../lib/currencies";
 import "../../table.css";
 
 export default async function AccountingDashboardPage({
@@ -162,11 +164,9 @@ export default async function AccountingDashboardPage({
   // Working Capital Calculation: Current Assets (Liquid + Receivables) - Current Liabilities (Payables)
   const workingCapital = (liquidFunds + totalReceivables) - totalPayables;
 
+  const currency = await getTenantCurrency(tenantId);
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-    }).format(amount);
+    return formatMoney(amount, currency);
   };
 
   return (

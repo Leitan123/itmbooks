@@ -13,13 +13,28 @@ export default async function SettingsPage() {
 
   const tenantId = (session.user as any).tenantId;
 
+  // Ensure currency column exists
+  try {
+    await db.query(`ALTER TABLE tenants ADD COLUMN IF NOT EXISTS currency VARCHAR(10) NOT NULL DEFAULT 'USD'`);
+  } catch (err: any) {
+    if (err?.code === 'ER_PARSE_ERROR' || err?.errno === 1064) {
+      try {
+        await db.query(`ALTER TABLE tenants ADD COLUMN currency VARCHAR(10) NOT NULL DEFAULT 'USD'`);
+      } catch (innerErr: any) {
+        if (innerErr?.errno !== 1060 && innerErr?.code !== 'ER_DUP_FIELDNAME') {
+          console.error("ensure currency column error:", innerErr);
+        }
+      }
+    }
+  }
+
   const [rows] = await db.query(
-    'SELECT name, address, tel, mobile, whatsapp, logo_url, theme_color FROM tenants WHERE id = ?',
+    'SELECT name, address, tel, mobile, whatsapp, logo_url, theme_color, currency FROM tenants WHERE id = ?',
     [tenantId]
   ) as any;
 
   const initialData = rows && rows.length > 0 ? rows[0] : {
-    name: '', address: '', tel: '', mobile: '', whatsapp: '', logo_url: '', theme_color: ''
+    name: '', address: '', tel: '', mobile: '', whatsapp: '', logo_url: '', theme_color: '', currency: 'USD'
   };
 
   return (

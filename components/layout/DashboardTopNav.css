@@ -274,6 +274,112 @@
   text-decoration: underline;
 }
 
+/* Currency Switcher */
+.dashboard-currency-btn {
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0 0.75rem;
+  border-radius: 9999px;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  color: #334155;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s ease;
+}
+
+.dashboard-currency-btn:hover,
+.dashboard-currency-btn.active {
+  background-color: #f0f9ff;
+  border-color: #bae6fd;
+  color: #00539B;
+  transform: translateY(-1px);
+}
+
+.dashboard-currency-caret {
+  font-size: 0.7rem;
+  color: #94a3b8;
+}
+
+.dashboard-currency-panel {
+  width: 300px;
+}
+
+.dashboard-currency-panel .dashboard-popover-body {
+  max-height: 300px;
+}
+
+.dashboard-currency-option {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  width: 100%;
+  padding: 0.55rem 0.7rem;
+  background: none;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  color: #1e293b;
+  transition: background-color 0.12s ease;
+}
+
+.dashboard-currency-option:hover:not(:disabled) {
+  background-color: #f8fafc;
+}
+
+.dashboard-currency-option:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.dashboard-currency-option.selected {
+  background-color: #e0f2fe;
+}
+
+.dashboard-currency-flag {
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.dashboard-currency-text {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.dashboard-currency-text strong {
+  font-size: 0.84rem;
+  color: #0f172a;
+  line-height: 1.2;
+}
+
+.dashboard-currency-text span {
+  font-size: 0.75rem;
+  color: #64748b;
+  line-height: 1.2;
+}
+
+.dashboard-currency-symbol {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #64748b;
+  min-width: 2rem;
+  text-align: right;
+}
+
+.dashboard-currency-check {
+  color: #168FCE;
+  font-weight: 700;
+}
+
 /* User Profile Badge & Dropdown */
 .dashboard-user-container {
   position: relative;

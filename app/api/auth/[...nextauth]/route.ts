@@ -3,6 +3,7 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
 import crypto from 'crypto';
 import { db } from '../../../../lib/db';
+import { sendLoginNotification } from '../../../../lib/mailer';
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -178,6 +179,41 @@ export const authOptions: NextAuthOptions = {
         }
       }
       return session;
+    },
+    async redirect({ url, baseUrl }) {
+      // If the incoming redirect is relative or doesn't include the basePath
+      const appBase = `${baseUrl}/itmbooks.com`;
+      if (url.startsWith('/itmbooks.com')) {
+        return `${baseUrl}${url}`;
+      }
+      if (url.startsWith('/')) {
+        return `${appBase}${url}`;
+      }
+      if (new URL(url).origin === baseUrl) {
+        if (!url.includes('/itmbooks.com')) {
+          const parsed = new URL(url);
+          return `${baseUrl}/itmbooks.com${parsed.pathname}${parsed.search}`;
+        }
+        return url;
+      }
+      return `${appBase}/dashboard`;
+    }
+  },
+  events: {
+    async signIn(message) {
+      try {
+        const userEmail = message.user?.email;
+        if (userEmail) {
+          const userName = message.user?.name || undefined;
+          const method = message.account?.provider === 'google' ? 'Google OAuth' : 'Email & Password';
+          // Send login notification asynchronously in background
+          sendLoginNotification(userEmail, userName, method).catch((err) => {
+            console.error('[NextAuth] Error in sendLoginNotification event:', err);
+          });
+        }
+      } catch (err) {
+        console.error('[NextAuth] signIn event error:', err);
+      }
     }
   }
 };

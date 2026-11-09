@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import '../../../(marketing)/form.css';
+import { useCurrency } from '../../../../components/CurrencyProvider';
 
 interface BankAccount {
   id: number;
@@ -34,6 +35,7 @@ export default function BankingClient({
   basePath: string,
   companySlug: string
 }) {
+  const { format: formatMoney } = useCurrency();
   const [banks, setBanks] = useState<BankAccount[]>(initialBanks);
   const [cashAccounts] = useState<CashAccount[]>(initialCash);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -120,21 +122,21 @@ export default function BankingClient({
         <div className="card" style={{ padding: '20px', borderLeft: '4px solid #10b981' }}>
           <div style={{ fontSize: '0.8rem', fontWeight: 600, color: '#64748b', textTransform: 'uppercase' }}>Total Liquid Capital</div>
           <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#0f172a', marginTop: '6px' }}>
-            ${totalLiquidFunds.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            {formatMoney(totalLiquidFunds)}
           </div>
           <div style={{ fontSize: '0.8rem', color: '#16a34a', marginTop: '4px' }}>Combined cash and bank deposits</div>
         </div>
         <div className="card" style={{ padding: '20px', borderLeft: '4px solid #2563eb' }}>
           <div style={{ fontSize: '0.8rem', fontWeight: 600, color: '#64748b', textTransform: 'uppercase' }}>Bank Accounts</div>
           <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#0f172a', marginTop: '6px' }}>
-            ${totalBankBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            {formatMoney(totalBankBalance)}
           </div>
           <div style={{ fontSize: '0.8rem', color: '#64748b', marginTop: '4px' }}>{banks.length} registered accounts</div>
         </div>
         <div className="card" style={{ padding: '20px', borderLeft: '4px solid #8b5cf6' }}>
           <div style={{ fontSize: '0.8rem', fontWeight: 600, color: '#64748b', textTransform: 'uppercase' }}>Cash in Hand</div>
           <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#0f172a', marginTop: '6px' }}>
-            ${totalCashBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            {formatMoney(totalCashBalance)}
           </div>
           <div style={{ fontSize: '0.8rem', color: '#64748b', marginTop: '4px' }}>Physical cash drawers & petty cash</div>
         </div>
@@ -171,7 +173,7 @@ export default function BankingClient({
                   <td style={{ padding: '14px 16px', fontFamily: 'monospace', fontWeight: 600, color: '#2563eb' }}>{b.accountNumber}</td>
                   <td style={{ padding: '14px 16px', color: '#64748b' }}>{b.branch || '-'}</td>
                   <td style={{ padding: '14px 16px', textAlign: 'right', fontWeight: 700, color: Number(b.currentBalance || 0) < 0 ? '#dc2626' : '#166534' }}>
-                    ${Number(b.currentBalance || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    {formatMoney(Number(b.currentBalance || 0))}
                   </td>
                   <td style={{ padding: '14px 16px', textAlign: 'center' }}>
                     <Link 
@@ -216,7 +218,7 @@ export default function BankingClient({
                 <td style={{ padding: '14px 16px', fontWeight: 600, color: '#1e293b' }}>{c.code}</td>
                 <td style={{ padding: '14px 16px', fontWeight: 500, color: '#0f172a' }}>{c.name}</td>
                 <td style={{ padding: '14px 16px', textAlign: 'right', fontWeight: 700, color: Number(c.balance || 0) < 0 ? '#dc2626' : '#166534' }}>
-                  ${Number(c.balance || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  {formatMoney(Number(c.balance || 0))}
                 </td>
                 <td style={{ padding: '14px 16px', textAlign: 'center' }}>
                   <Link 

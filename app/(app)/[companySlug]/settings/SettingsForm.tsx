@@ -2,6 +2,8 @@
 
 import { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import { CURRENCIES, DEFAULT_CURRENCY } from '../../../../lib/currencies';
+import { useCurrency } from '../../../../components/CurrencyProvider';
 import '../../../(marketing)/form.css';
 
 type Settings = {
@@ -12,16 +14,21 @@ type Settings = {
   whatsapp: string;
   logo_url: string;
   theme_color: string;
+  currency?: string;
 };
 
 export default function SettingsForm({ initialData, basePath }: { initialData: Settings; basePath: string }) {
   const router = useRouter();
-  const [formData, setFormData] = useState<Settings>(initialData);
+  const { setCurrency: setGlobalCurrency } = useCurrency();
+  const [formData, setFormData] = useState<Settings>({
+    ...initialData,
+    currency: initialData.currency || DEFAULT_CURRENCY,
+  });
   const [isSaving, setIsSaving] = useState(false);
   const [message, setMessage] = useState({ text: '', type: '' });
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
@@ -66,6 +73,13 @@ export default function SettingsForm({ initialData, basePath }: { initialData: S
       const data = await res.json();
       if (res.ok) {
         setMessage({ text: 'Settings saved successfully!', type: 'success' });
+        if (formData.currency) {
+          try {
+            await setGlobalCurrency(formData.currency);
+          } catch {
+            // fallback
+          }
+        }
         router.refresh();
       } else {
         setMessage({ text: data.error || 'Failed to save settings', type: 'error' });
@@ -124,17 +138,44 @@ export default function SettingsForm({ initialData, basePath }: { initialData: S
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '20px' }}>
-          <div className="form-group">
-            <label className="form-label">Theme Color</label>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <input 
-                type="color" 
-                name="theme_color" 
-                value={formData.theme_color || '#168FCE'} 
-                onChange={handleChange} 
-                style={{ width: '50px', height: '40px', padding: '0', cursor: 'pointer' }}
-              />
-              <span style={{ fontSize: '0.9rem', color: '#64748b' }}>Select your brand color</span>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+            <div className="form-group">
+              <label className="form-label">Theme Color</label>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <input 
+                  type="color" 
+                  name="theme_color" 
+                  value={formData.theme_color || '#168FCE'} 
+                  onChange={handleChange} 
+                  style={{ width: '50px', height: '40px', padding: '0', cursor: 'pointer' }}
+                />
+                <span style={{ fontSize: '0.9rem', color: '#64748b' }}>Brand accent</span>
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Default Currency</label>
+              <select
+                name="currency"
+                className="form-input"
+                value={formData.currency || 'USD'}
+                onChange={handleChange}
+                style={{
+                  height: '40px',
+                  fontWeight: 600,
+                  color: '#0f172a',
+                  backgroundColor: '#ffffff',
+                }}
+              >
+                {CURRENCIES.map((c) => (
+                  <option key={c.code} value={c.code}>
+                    {c.flag} {c.code} — {c.name} ({c.symbol})
+                  </option>
+                ))}
+              </select>
+              <span style={{ display: 'block', marginTop: '4px', fontSize: '0.8rem', color: '#64748b' }}>
+                All invoices, quotations, bills, reports, and dashboards will display in this currency.
+              </span>
             </div>
           </div>
 

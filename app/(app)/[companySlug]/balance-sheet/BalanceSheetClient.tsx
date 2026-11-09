@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useCurrency } from '../../../../components/CurrencyProvider';
 
 interface AccountBalanceLine {
   id: number;
@@ -31,6 +32,7 @@ export default function BalanceSheetClient({
   basePath: string,
   companySlug: string
 }) {
+  const { format: formatMoney } = useCurrency();
   const [data, setData] = useState<BalanceSheetData>(initialData);
   const [asOfDate, setAsOfDate] = useState(new Date().toISOString().split('T')[0]);
   const [isLoading, setIsLoading] = useState(false);
@@ -115,13 +117,13 @@ export default function BalanceSheetClient({
             {data.isBalanced ? '✓ Fundamental Equation Balances (Assets = Liabilities + Equity)' : '⚠ Discrepancy in Accounting Equation'}
           </div>
           <div style={{ fontSize: '0.85rem', color: data.isBalanced ? '#15803d' : '#b91c1c', marginTop: '2px' }}>
-            Assets: ${data.totalAssets.toFixed(2)} | Liabilities & Equity: ${data.totalLiabilitiesAndEquity.toFixed(2)}
+            Assets: {formatMoney(data.totalAssets)} | Liabilities & Equity: {formatMoney(data.totalLiabilitiesAndEquity)}
           </div>
         </div>
         <div style={{ textAlign: 'right' }}>
           <div style={{ fontSize: '0.75rem', fontWeight: 600, color: '#64748b', textTransform: 'uppercase' }}>Discrepancy</div>
           <div style={{ fontSize: '1.25rem', fontWeight: 700, color: data.isBalanced ? '#166534' : '#dc2626' }}>
-            ${discrepancy.toFixed(2)}
+            {formatMoney(discrepancy)}
           </div>
         </div>
       </div>
@@ -163,7 +165,7 @@ export default function BalanceSheetClient({
                       </Link>
                     </td>
                     <td style={{ padding: '10px 12px', textAlign: 'right', fontWeight: 600 }}>
-                      ${acc.balance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                      {formatMoney(acc.balance)}
                     </td>
                   </tr>
                 ))
@@ -171,7 +173,7 @@ export default function BalanceSheetClient({
               <tr style={{ borderTop: '2px solid #cbd5e1', fontWeight: 700 }}>
                 <td style={{ padding: '12px', color: '#065f46' }}>TOTAL ASSETS:</td>
                 <td style={{ padding: '12px', textAlign: 'right', color: '#065f46', fontSize: '1.1rem', borderBottom: '3px double #065f46' }}>
-                  ${data.totalAssets.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  {formatMoney(data.totalAssets)}
                 </td>
               </tr>
             </tbody>
@@ -206,7 +208,7 @@ export default function BalanceSheetClient({
                       </Link>
                     </td>
                     <td style={{ padding: '10px 12px', textAlign: 'right', fontWeight: 600 }}>
-                      ${acc.balance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                      {formatMoney(acc.balance)}
                     </td>
                   </tr>
                 ))
@@ -214,7 +216,7 @@ export default function BalanceSheetClient({
               <tr style={{ borderTop: '2px solid #cbd5e1', fontWeight: 700 }}>
                 <td style={{ padding: '12px', color: '#9a3412' }}>TOTAL LIABILITIES:</td>
                 <td style={{ padding: '12px', textAlign: 'right', color: '#9a3412', fontSize: '1.05rem' }}>
-                  ${data.totalLiabilities.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  {formatMoney(data.totalLiabilities)}
                 </td>
               </tr>
             </tbody>
@@ -244,7 +246,7 @@ export default function BalanceSheetClient({
                     </Link>
                   </td>
                   <td style={{ padding: '10px 12px', textAlign: 'right', fontWeight: 600 }}>
-                    ${acc.balance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    {formatMoney(acc.balance)}
                   </td>
                 </tr>
               ))}
@@ -254,13 +256,13 @@ export default function BalanceSheetClient({
                   Current Period Net Earnings (rolled from P&L)
                 </td>
                 <td style={{ padding: '10px 12px', textAlign: 'right', fontWeight: 600, color: data.currentPeriodProfit >= 0 ? '#166534' : '#dc2626' }}>
-                  ${data.currentPeriodProfit.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  {formatMoney(data.currentPeriodProfit)}
                 </td>
               </tr>
               <tr style={{ borderTop: '2px solid #cbd5e1', fontWeight: 700 }}>
                 <td style={{ padding: '12px', color: '#6b21a8' }}>TOTAL EQUITY:</td>
                 <td style={{ padding: '12px', textAlign: 'right', color: '#6b21a8', fontSize: '1.05rem' }}>
-                  ${data.totalEquity.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  {formatMoney(data.totalEquity)}
                 </td>
               </tr>
             </tbody>
@@ -283,7 +285,7 @@ export default function BalanceSheetClient({
               TOTAL LIABILITIES & EQUITY:
             </div>
             <div style={{ fontSize: '0.8rem', color: '#64748b' }}>
-              Must equal Total Assets (${data.totalAssets.toFixed(2)})
+              Must equal Total Assets ({formatMoney(data.totalAssets)})
             </div>
           </div>
           <div style={{ 
@@ -292,7 +294,7 @@ export default function BalanceSheetClient({
             color: data.isBalanced ? '#166534' : '#dc2626',
             borderBottom: '3px double #0f172a'
           }}>
-            ${data.totalLiabilitiesAndEquity.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            {formatMoney(data.totalLiabilitiesAndEquity)}
           </div>
         </div>
       </div>

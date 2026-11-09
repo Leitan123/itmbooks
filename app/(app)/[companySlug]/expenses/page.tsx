@@ -6,6 +6,7 @@ import { useParams } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import '../../table.css';
 import '../../../(marketing)/form.css';
+import { useCurrency } from '../../../../components/CurrencyProvider';
 
 interface AccountOption {
   id: number;
@@ -15,6 +16,7 @@ interface AccountOption {
 }
 
 export default function ExpensesPage() {
+  const { format: formatMoney } = useCurrency();
   const { data: session } = useSession();
   const params = useParams();
   const companySlug = (params?.companySlug as string) || 'dashboard';
@@ -197,7 +199,7 @@ export default function ExpensesPage() {
         <div className="card" style={{ padding: '16px', borderLeft: '4px solid #ef4444' }}>
           <div style={{ fontSize: '0.75rem', fontWeight: 600, color: '#64748b', textTransform: 'uppercase' }}>Total Expenditures</div>
           <div style={{ fontSize: '1.4rem', fontWeight: 700, color: '#991b1b', marginTop: '4px' }}>
-            ${totalExpenseSum.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            {formatMoney(totalExpenseSum)}
           </div>
         </div>
         <div className="card" style={{ padding: '16px', borderLeft: '4px solid #2563eb' }}>
@@ -246,7 +248,7 @@ export default function ExpensesPage() {
                       {e.notes || '-'}
                     </td>
                     <td style={{ padding: '12px 16px', textAlign: 'right', fontWeight: 700, color: '#dc2626' }}>
-                      ${Number(e.amount).toFixed(2)}
+                      {formatMoney(Number(e.amount))}
                     </td>
                     <td style={{ padding: '12px 16px', textAlign: 'right' }}>
                       <button 

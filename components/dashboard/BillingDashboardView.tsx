@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { useCurrency } from '../CurrencyProvider';
 
 export interface RevenuePeriod {
   label: string;
@@ -65,7 +66,7 @@ export default function BillingDashboardView({
   recentInvoices,
 }: BillingDashboardProps) {
   // Filters State
-  const [currency, setCurrency] = useState<'USD' | 'LKR' | 'EUR' | 'GBP'>('USD');
+  const { currency, info: currencyInfo, currencies, setCurrency, format: formatMoney } = useCurrency();
   const [dateRange, setDateRange] = useState<string>('Last 30 days');
   const [billingEntity, setBillingEntity] = useState<string>('Billing entity');
   
@@ -80,7 +81,6 @@ export default function BillingDashboardView({
 
   // Reset Filters
   const handleResetFilters = () => {
-    setCurrency('USD');
     setDateRange('Last 30 days');
     setBillingEntity('Billing entity');
     setCurrencyOpen(false);
@@ -89,13 +89,10 @@ export default function BillingDashboardView({
   };
 
   // Helper currency formatter
-  const formatCur = (amount: number, customSymbol?: string) => {
-    const symbol = customSymbol || (currency === 'USD' ? '$' : currency === 'EUR' ? '€' : currency === 'GBP' ? '£' : 'Rs. ');
-    return `${symbol}${amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-  };
+  const formatCur = (amount: number) => formatMoney(amount);
 
   // Currency flag icon
-  const currencyFlag = currency === 'USD' ? '🇺🇸' : currency === 'EUR' ? '🇪🇺' : currency === 'GBP' ? '🇬🇧' : '🇱🇰';
+  const currencyFlag = currencyInfo.flag;
 
   // --------------------------------------------------------------------------
   // REAL DYNAMIC DATA PROCESSING (No dummy data)
@@ -295,18 +292,18 @@ export default function BillingDashboardView({
 
           {currencyOpen && (
             <div className="billing-dropdown-menu">
-              {(['USD', 'EUR', 'GBP', 'LKR'] as const).map((curr) => (
+              {currencies.map((c) => (
                 <button
-                  key={curr}
+                  key={c.code}
                   type="button"
-                  className={`billing-dropdown-item ${currency === curr ? 'active' : ''}`}
+                  className={`billing-dropdown-item ${currency === c.code ? 'active' : ''}`}
                   onClick={() => {
-                    setCurrency(curr);
+                    setCurrency(c.code);
                     setCurrencyOpen(false);
                   }}
                 >
-                  <span>{curr === 'USD' ? '🇺🇸' : curr === 'EUR' ? '🇪🇺' : curr === 'GBP' ? '🇬🇧' : '🇱🇰'}</span>
-                  {curr}
+                  <span>{c.flag}</span>
+                  {c.code}
                 </button>
               ))}
             </div>

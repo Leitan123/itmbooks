@@ -2,8 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import '../../table.css';
+import { useCurrency } from '../../../../components/CurrencyProvider';
 
 export default function InvoicesPage() {
+  const { format: formatMoney } = useCurrency();
   const [invoices, setInvoices] = useState([]);
   const [customers, setCustomers] = useState([]);
   const [availableItems, setAvailableItems] = useState([]);
@@ -220,7 +222,7 @@ export default function InvoicesPage() {
                         {inv.status}
                       </span>
                     </td>
-                    <td className="font-medium">${Number(inv.total_amount).toFixed(2)}</td>
+                    <td className="font-medium">{formatMoney(Number(inv.total_amount))}</td>
                     <td style={{ textAlign: 'right' }}>
                       <button 
                         onClick={() => handleOpenModal(inv)} 
@@ -307,7 +309,7 @@ export default function InvoicesPage() {
                     <div style={{ flex: 1 }}>
                       <label style={{ fontSize: '0.75rem', color: '#6b7280', display: 'block', marginBottom: '0.25rem' }}>Total</label>
                       <div style={{ padding: '0.625rem 0', fontWeight: 600 }}>
-                        ${(item.quantity * item.unit_price).toFixed(2)}
+                        {formatMoney(item.quantity * item.unit_price)}
                       </div>
                     </div>
                     <div style={{ padding: '1.25rem 0 0 0' }}>
@@ -321,7 +323,7 @@ export default function InvoicesPage() {
               </div>
 
               <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '1.5rem', fontSize: '1.25rem', fontWeight: 700 }}>
-                Total Amount: ${calculateTotal().toFixed(2)}
+                Total Amount: {formatMoney(calculateTotal())}
               </div>
 
               <div className="modal-actions">

@@ -5,6 +5,8 @@ import '../../dashboard.css';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../../api/auth/[...nextauth]/route';
 import { db } from '../../../lib/db';
+import { getTenantCurrency } from '../../../lib/tenant-currency';
+import { CurrencyProvider } from '../../../components/CurrencyProvider';
 
 export const metadata: Metadata = {
   title: 'Dashboard | ITM Books',
@@ -23,6 +25,7 @@ export default async function DashboardLayout({
   const session = await getServerSession(authOptions);
   let companyName = "Company Name";
   let themeColor = null;
+  let currency = 'USD';
 
   if (session && session.user) {
     const tenantId = (session.user as any).tenantId;
@@ -35,6 +38,7 @@ export default async function DashboardLayout({
     } catch (e) {
       console.error("Error fetching tenant details in layout:", e);
     }
+    currency = await getTenantCurrency(tenantId);
   }
 
   const rawAccountType = (session?.user as any)?.accountType || 'Invoice';
@@ -49,41 +53,43 @@ export default async function DashboardLayout({
     .toUpperCase();
 
   return (
-    <div className="dashboard-body">
-      {themeColor && (
-        <style dangerouslySetInnerHTML={{__html: `
-          :root {
-            --primary-color: ${themeColor} !important;
-          }
-        `}} />
-      )}
-      <div className="dashboard-layout">
-        
-        <Sidebar />
-
-        {/* Main Content Area */}
-        <main className="dashboard-main">
+    <CurrencyProvider initialCurrency={currency}>
+      <div className="dashboard-body">
+        {themeColor && (
+          <style dangerouslySetInnerHTML={{__html: `
+            :root {
+              --primary-color: ${themeColor} !important;
+            }
+          `}} />
+        )}
+        <div className="dashboard-layout">
           
-          {/* Topbar with functioning search, popovers, and user dropdown */}
-          <header className="dashboard-topbar">
-            <DashboardTopNav
-              companyName={companyName}
-              initials={initials}
-              userName={session?.user?.name || companyName}
-              userEmail={session?.user?.email || ''}
-              companySlug={companySlug}
-              accountType={accountType}
-            />
-          </header>
+          <Sidebar />
+
+          {/* Main Content Area */}
+          <main className="dashboard-main">
+            
+            {/* Topbar with functioning search, popovers, and user dropdown */}
+            <header className="dashboard-topbar">
+              <DashboardTopNav
+                companyName={companyName}
+                initials={initials}
+                userName={session?.user?.name || companyName}
+                userEmail={session?.user?.email || ''}
+                companySlug={companySlug}
+                accountType={accountType}
+              />
+            </header>
 
 
-          {/* Content Container */}
-          <div className="dashboard-content">
-            {children}
-          </div>
-          
-        </main>
+            {/* Content Container */}
+            <div className="dashboard-content">
+              {children}
+            </div>
+            
+          </main>
+        </div>
       </div>
-    </div>
+    </CurrencyProvider>
   );
 }

@@ -42,7 +42,7 @@ function LoginForm() {
     setIsGoogleLoading(true);
     setError('');
     try {
-      await signIn('google', { callbackUrl: '/dashboard' });
+      await signIn('google', { callbackUrl: '/itmbooks.com/dashboard' });
     } catch (err) {
       setIsGoogleLoading(false);
       setError('Could not initiate Google authentication.');

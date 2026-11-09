@@ -13,7 +13,7 @@ export async function GET(request: Request) {
     const tenantId = (session.user as any).tenantId;
 
     const [rows] = await db.query(
-      'SELECT id, name, address, tel, mobile, whatsapp, logo_url, theme_color FROM tenants WHERE id = ?',
+      'SELECT id, name, address, tel, mobile, whatsapp, logo_url, theme_color, currency FROM tenants WHERE id = ?',
       [tenantId]
     ) as any;
 
@@ -37,7 +37,7 @@ export async function PUT(request: Request) {
 
     const tenantId = (session.user as any).tenantId;
     const body = await request.json();
-    const { name, address, tel, mobile, whatsapp, logo_url, theme_color } = body;
+    const { name, address, tel, mobile, whatsapp, logo_url, theme_color, currency } = body;
 
     if (!name) {
       return NextResponse.json({ error: 'Company name is required' }, { status: 400 });
@@ -45,9 +45,9 @@ export async function PUT(request: Request) {
 
     await db.query(
       `UPDATE tenants 
-       SET name = ?, address = ?, tel = ?, mobile = ?, whatsapp = ?, logo_url = ?, theme_color = ? 
+       SET name = ?, address = ?, tel = ?, mobile = ?, whatsapp = ?, logo_url = ?, theme_color = ?, currency = ? 
        WHERE id = ?`,
-      [name, address || null, tel || null, mobile || null, whatsapp || null, logo_url || null, theme_color || null, tenantId]
+      [name, address || null, tel || null, mobile || null, whatsapp || null, logo_url || null, theme_color || null, currency || 'USD', tenantId]
     );
 
     return NextResponse.json({ success: true, message: 'Settings updated successfully' });

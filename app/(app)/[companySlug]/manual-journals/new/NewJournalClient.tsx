@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import '../../../../(marketing)/form.css';
+import { useCurrency } from '../../../../../components/CurrencyProvider';
 
 type Account = {
   id: number;
@@ -12,6 +13,7 @@ type Account = {
 };
 
 export default function NewJournalClient({ accounts, basePath, companySlug }: { accounts: Account[], basePath: string, companySlug: string }) {
+  const { format: formatMoney } = useCurrency();
   const router = useRouter();
   const [formData, setFormData] = useState({ date: new Date().toISOString().split('T')[0], reference: '', notes: '' });
   const [lines, setLines] = useState([{ id: 1, account_id: '', description: '', debit: '', credit: '' }, { id: 2, account_id: '', description: '', debit: '', credit: '' }]);
@@ -157,11 +159,11 @@ export default function NewJournalClient({ accounts, basePath, companySlug }: { 
           <div style={{ display: 'flex', gap: '40px', paddingRight: '40px' }}>
             <div style={{ textAlign: 'right' }}>
               <div style={{ color: '#64748b', fontSize: '0.85rem', fontWeight: '600', textTransform: 'uppercase' }}>Total Debits</div>
-              <div style={{ fontSize: '1.5rem', fontWeight: '700', color: isBalanced ? '#16a34a' : '#0f172a' }}>${totalDebit.toFixed(2)}</div>
+              <div style={{ fontSize: '1.5rem', fontWeight: '700', color: isBalanced ? '#16a34a' : '#0f172a' }}>{formatMoney(totalDebit)}</div>
             </div>
             <div style={{ textAlign: 'right' }}>
               <div style={{ color: '#64748b', fontSize: '0.85rem', fontWeight: '600', textTransform: 'uppercase' }}>Total Credits</div>
-              <div style={{ fontSize: '1.5rem', fontWeight: '700', color: isBalanced ? '#16a34a' : '#0f172a' }}>${totalCredit.toFixed(2)}</div>
+              <div style={{ fontSize: '1.5rem', fontWeight: '700', color: isBalanced ? '#16a34a' : '#0f172a' }}>{formatMoney(totalCredit)}</div>
             </div>
           </div>
         </div>

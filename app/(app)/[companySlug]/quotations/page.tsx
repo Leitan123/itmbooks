@@ -2,8 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import '../../table.css';
+import { useCurrency } from '../../../../components/CurrencyProvider';
 
 export default function QuotationsPage() {
+  const { format: formatMoney } = useCurrency();
   const [quotations, setQuotations] = useState<any[]>([]);
   const [customers, setCustomers] = useState<any[]>([]);
   const [availableItems, setAvailableItems] = useState<any[]>([]);
@@ -179,7 +181,7 @@ export default function QuotationsPage() {
   };
 
   const formatCurrency = (val: number) => {
-    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(val);
+    return formatMoney(val);
   };
 
   const filteredQuotations = quotations.filter(q => {
@@ -209,32 +211,55 @@ export default function QuotationsPage() {
 
       {/* KPI Cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', marginBottom: '24px' }}>
-        <div className="card" style={{ padding: '18px', borderLeft: '4px solid #3b82f6' }}>
+        <div className="card" style={{ padding: '18px', borderLeft: '4px solid #168FCE' }}>
           <div style={{ fontSize: '0.75rem', fontWeight: 600, color: '#64748b', textTransform: 'uppercase' }}>Total Quotations</div>
           <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#0f172a', marginTop: '4px' }}>{quotations.length}</div>
-          <div style={{ fontSize: '0.8rem', color: '#3b82f6', marginTop: '2px' }}>Total pipeline: {formatCurrency(totalValue)}</div>
+          <div style={{ fontSize: '0.8rem', color: '#168FCE', marginTop: '2px' }}>Total pipeline: {formatCurrency(totalValue)}</div>
         </div>
         <div className="card" style={{ padding: '18px', borderLeft: '4px solid #f59e0b' }}>
           <div style={{ fontSize: '0.75rem', fontWeight: 600, color: '#64748b', textTransform: 'uppercase' }}>Pending Approval</div>
           <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#f59e0b', marginTop: '4px' }}>{pendingCount}</div>
           <div style={{ fontSize: '0.8rem', color: '#64748b', marginTop: '2px' }}>Awaiting customer reply</div>
         </div>
-        <div className="card" style={{ padding: '18px', borderLeft: '4px solid #10b981' }}>
+        <div className="card" style={{ padding: '18px', borderLeft: '4px solid #00539B' }}>
           <div style={{ fontSize: '0.75rem', fontWeight: 600, color: '#64748b', textTransform: 'uppercase' }}>Approved Quotations</div>
-          <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#10b981', marginTop: '4px' }}>{approvedCount}</div>
-          <div style={{ fontSize: '0.8rem', color: '#10b981', marginTop: '2px' }}>Ready for invoice conversion</div>
+          <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#00539B', marginTop: '4px' }}>{approvedCount}</div>
+          <div style={{ fontSize: '0.8rem', color: '#00539B', marginTop: '2px' }}>Ready for invoice conversion</div>
         </div>
       </div>
 
       {/* Filters */}
       <div className="filters-container">
-        <input 
-          type="text" 
-          placeholder="Search by quotation # or customer name..." 
-          className="search-input"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
+        <div className="search-input-wrap">
+          <svg
+            style={{
+              position: 'absolute',
+              left: '0.75rem',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              color: '#94a3b8',
+              pointerEvents: 'none'
+            }}
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input 
+            type="text" 
+            placeholder="Search by quotation # or customer name..." 
+            className="search-input"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
         <select 
           className="filter-select"
           value={statusFilter}
@@ -262,43 +287,45 @@ export default function QuotationsPage() {
             </button>
           </div>
         ) : (
-          <table className="data-table">
-            <thead>
-              <tr>
-                <th>Quotation #</th>
-                <th>Customer</th>
-                <th>Date</th>
-                <th>Valid Until</th>
-                <th>Amount</th>
-                <th>Status</th>
-                <th style={{ textAlign: 'right' }}>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredQuotations.map((q) => (
-                <tr key={q.id}>
-                  <td className="font-semibold text-primary">{q.quotation_number}</td>
-                  <td>{q.customer_name}</td>
-                  <td>{new Date(q.date).toLocaleDateString()}</td>
-                  <td>{new Date(q.expiry_date).toLocaleDateString()}</td>
-                  <td className="font-semibold">{formatCurrency(Number(q.total_amount))}</td>
-                  <td>
-                    <span className={`status-pill ${
-                      q.status === 'Approved' ? 'status-paid' :
-                      q.status === 'Pending' ? 'status-partially-paid' :
-                      q.status === 'Rejected' ? 'status-overdue' : 'status-unpaid'
-                    }`}>
-                      {q.status}
-                    </span>
-                  </td>
-                  <td style={{ textAlign: 'right' }}>
-                    <button className="action-btn" onClick={() => handleOpenModal(q)}>Edit</button>
-                    <button className="action-btn text-danger" onClick={() => handleDelete(q.id)}>Delete</button>
-                  </td>
+          <div className="table-responsive">
+            <table className="data-table">
+              <thead>
+                <tr>
+                  <th>Quotation #</th>
+                  <th>Customer</th>
+                  <th>Date</th>
+                  <th>Valid Until</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                  <th style={{ textAlign: 'right' }}>Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {filteredQuotations.map((q) => (
+                  <tr key={q.id}>
+                    <td className="font-semibold text-primary">{q.quotation_number}</td>
+                    <td>{q.customer_name}</td>
+                    <td>{new Date(q.date).toLocaleDateString()}</td>
+                    <td>{new Date(q.expiry_date).toLocaleDateString()}</td>
+                    <td className="font-semibold">{formatCurrency(Number(q.total_amount))}</td>
+                    <td>
+                      <span className={`status-pill ${
+                        q.status === 'Approved' ? 'status-approved' :
+                        q.status === 'Pending' ? 'status-pending' :
+                        q.status === 'Rejected' ? 'status-rejected' : 'status-draft'
+                      }`}>
+                        {q.status}
+                      </span>
+                    </td>
+                    <td style={{ textAlign: 'right' }}>
+                      <button className="action-btn" onClick={() => handleOpenModal(q)}>Edit</button>
+                      <button className="action-btn text-danger" onClick={() => handleDelete(q.id)}>Delete</button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
       </div>
 
@@ -452,7 +479,7 @@ export default function QuotationsPage() {
                 <div style={{ display: 'flex', justifyContent: 'flex-end', borderTop: '1px solid #e2e8f0', paddingTop: '1rem', marginTop: '1rem' }}>
                   <div style={{ textAlign: 'right' }}>
                     <div style={{ fontSize: '0.875rem', color: '#64748b' }}>Estimated Total Amount:</div>
-                    <div style={{ fontSize: '1.75rem', fontWeight: 700, color: '#16a34a' }}>
+                    <div style={{ fontSize: '1.75rem', fontWeight: 700, color: '#168FCE' }}>
                       {formatCurrency(calculateTotal())}
                     </div>
                   </div>

@@ -2,8 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import '../../table.css';
+import { useCurrency } from '../../../../components/CurrencyProvider';
 
 export default function PaymentsReceivedPage() {
+  const { format: formatMoney } = useCurrency();
   const [payments, setPayments] = useState([]);
   const [customers, setCustomers] = useState([]);
   const [invoices, setInvoices] = useState([]);
@@ -181,7 +183,7 @@ export default function PaymentsReceivedPage() {
                       )}
                     </td>
                     <td>{payment.payment_mode}</td>
-                    <td className="font-medium text-green-600">${Number(payment.amount).toFixed(2)}</td>
+                    <td className="font-medium text-green-600">{formatMoney(Number(payment.amount))}</td>
                     <td style={{ textAlign: 'right' }}>
                       <button 
                         onClick={() => handleOpenModal(payment)} 
@@ -225,7 +227,7 @@ export default function PaymentsReceivedPage() {
                   <select className="form-control" value={formData.invoice_id} onChange={e => setFormData({...formData, invoice_id: e.target.value})}>
                     <option value="">Do not apply to an invoice</option>
                     {invoices.filter((inv: any) => inv.customer_id.toString() === formData.customer_id.toString()).map((inv: any) => (
-                      <option key={inv.id} value={inv.id}>{inv.invoice_number} - ${Number(inv.total_amount).toFixed(2)} ({inv.status})</option>
+                      <option key={inv.id} value={inv.id}>{inv.invoice_number} - {formatMoney(Number(inv.total_amount))} ({inv.status})</option>
                     ))}
                   </select>
                 </div>

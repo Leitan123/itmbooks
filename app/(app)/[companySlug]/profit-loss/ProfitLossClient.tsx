@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useCurrency } from '../../../../components/CurrencyProvider';
 
 interface AccountLine {
   id: number;
@@ -27,6 +28,7 @@ export default function ProfitLossClient({
   basePath: string,
   companySlug: string
 }) {
+  const { format: formatMoney } = useCurrency();
   const [data, setData] = useState<ProfitLossData>(initialData);
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState(new Date().toISOString().split('T')[0]);
@@ -112,19 +114,19 @@ export default function ProfitLossClient({
         <div className="card" style={{ padding: '20px', borderLeft: '4px solid #3b82f6' }}>
           <div style={{ fontSize: '0.8rem', fontWeight: 600, color: '#64748b', textTransform: 'uppercase' }}>Total Revenue</div>
           <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#0f172a', marginTop: '6px' }}>
-            ${data.totalIncome.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            {formatMoney(data.totalIncome)}
           </div>
         </div>
         <div className="card" style={{ padding: '20px', borderLeft: '4px solid #ef4444' }}>
           <div style={{ fontSize: '0.8rem', fontWeight: 600, color: '#64748b', textTransform: 'uppercase' }}>Total Expenses</div>
           <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#0f172a', marginTop: '6px' }}>
-            ${data.totalExpenses.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            {formatMoney(data.totalExpenses)}
           </div>
         </div>
         <div className="card" style={{ padding: '20px', borderLeft: `4px solid ${data.netProfit >= 0 ? '#10b981' : '#dc2626'}` }}>
           <div style={{ fontSize: '0.8rem', fontWeight: 600, color: '#64748b', textTransform: 'uppercase' }}>Net Profit / (Loss)</div>
           <div style={{ fontSize: '1.5rem', fontWeight: 700, color: data.netProfit >= 0 ? '#166534' : '#dc2626', marginTop: '6px' }}>
-            ${data.netProfit.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            {formatMoney(data.netProfit)}
           </div>
           <div style={{ fontSize: '0.8rem', color: '#64748b', marginTop: '4px' }}>
             Net Margin: {netMargin.toFixed(1)}%
@@ -169,7 +171,7 @@ export default function ProfitLossClient({
                       </Link>
                     </td>
                     <td style={{ padding: '10px 12px', textAlign: 'right', fontWeight: 600 }}>
-                      ${acc.amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                      {formatMoney(acc.amount)}
                     </td>
                   </tr>
                 ))
@@ -177,7 +179,7 @@ export default function ProfitLossClient({
               <tr style={{ borderTop: '2px solid #cbd5e1', fontWeight: 700 }}>
                 <td style={{ padding: '12px', color: '#1e3a8a' }}>TOTAL OPERATING REVENUE:</td>
                 <td style={{ padding: '12px', textAlign: 'right', color: '#1e3a8a', fontSize: '1rem' }}>
-                  ${data.totalIncome.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  {formatMoney(data.totalIncome)}
                 </td>
               </tr>
             </tbody>
@@ -212,7 +214,7 @@ export default function ProfitLossClient({
                       </Link>
                     </td>
                     <td style={{ padding: '10px 12px', textAlign: 'right', fontWeight: 600 }}>
-                      ${acc.amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                      {formatMoney(acc.amount)}
                     </td>
                   </tr>
                 ))
@@ -220,7 +222,7 @@ export default function ProfitLossClient({
               <tr style={{ borderTop: '2px solid #cbd5e1', fontWeight: 700 }}>
                 <td style={{ padding: '12px', color: '#991b1b' }}>TOTAL OPERATING EXPENSES:</td>
                 <td style={{ padding: '12px', textAlign: 'right', color: '#991b1b', fontSize: '1rem' }}>
-                  ${data.totalExpenses.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  {formatMoney(data.totalExpenses)}
                 </td>
               </tr>
             </tbody>
@@ -252,7 +254,7 @@ export default function ProfitLossClient({
             color: data.netProfit >= 0 ? '#166534' : '#dc2626',
             borderBottom: `3px double ${data.netProfit >= 0 ? '#166534' : '#dc2626'}`
           }}>
-            ${data.netProfit.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            {formatMoney(data.netProfit)}
           </div>
         </div>
       </div>

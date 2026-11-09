@@ -2,8 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import '../../table.css';
+import { useCurrency } from '../../../../components/CurrencyProvider';
 
 export default function ItemsPage() {
+  const { format: formatMoney } = useCurrency();
   const [items, setItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -123,7 +125,7 @@ export default function ItemsPage() {
                   <tr key={item.id}>
                     <td><div className="font-medium text-gray-900">{item.name}</div></td>
                     <td>{item.description || '-'}</td>
-                    <td>${Number(item.price).toFixed(2)}</td>
+                    <td>{formatMoney(Number(item.price))}</td>
                     <td>{item.stock_quantity}</td>
                     <td style={{ textAlign: 'right' }}>
                       <button 

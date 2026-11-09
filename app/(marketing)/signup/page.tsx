@@ -27,7 +27,7 @@ export default function SignupPage() {
     setIsGoogleLoading(true);
     setError('');
     try {
-      await signIn('google', { callbackUrl: '/dashboard' });
+      await signIn('google', { callbackUrl: '/itmbooks.com/dashboard' });
     } catch (err) {
       setIsGoogleLoading(false);
       setError('Could not connect to Google authentication.');

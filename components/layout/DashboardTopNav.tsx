@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { signOut } from 'next-auth/react';
 import './DashboardTopNav.css';
+import { useCurrency } from '../CurrencyProvider';
 
 export interface DashboardTopNavProps {
   companyName: string;
@@ -27,6 +28,10 @@ export default function DashboardTopNav({
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [helpOpen, setHelpOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [currencyOpen, setCurrencyOpen] = useState(false);
+
+  // Company-wide display currency
+  const { currency, info: currencyInfo, currencies, setCurrency, saving: currencySaving, format: formatMoney } = useCurrency();
 
   // Search state
   const [searchQuery, setSearchQuery] = useState('');
@@ -45,6 +50,7 @@ export default function DashboardTopNav({
     setNotificationsOpen(false);
     setHelpOpen(false);
     setUserMenuOpen(false);
+    setCurrencyOpen(false);
     setSearchFocused(false);
   };
 
@@ -123,6 +129,7 @@ export default function DashboardTopNav({
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onFocus={() => {
+              setCurrencyOpen(false);
               setSearchFocused(true);
               setMessagesOpen(false);
               setNotificationsOpen(false);
@@ -171,6 +178,67 @@ export default function DashboardTopNav({
         {/* Quick Icons: Messages, Notifications, Help */}
         <div className="dashboard-icons-group">
           
+          {/* Currency Switcher */}
+          <div className="dashboard-icon-btn-wrap">
+            <button
+              type="button"
+              className={`dashboard-currency-btn ${currencyOpen ? 'active' : ''}`}
+              title="Change currency"
+              aria-haspopup="listbox"
+              aria-expanded={currencyOpen}
+              onClick={() => {
+                setCurrencyOpen(!currencyOpen);
+                setMessagesOpen(false);
+                setNotificationsOpen(false);
+                setHelpOpen(false);
+                setUserMenuOpen(false);
+                setSearchFocused(false);
+              }}
+            >
+              <span>{currencyInfo.flag}</span>
+              <span>{currency}</span>
+              <span className="dashboard-currency-caret">▾</span>
+            </button>
+
+            {currencyOpen && (
+              <div className="dashboard-popover-panel dashboard-currency-panel" role="listbox" aria-label="Select currency">
+                <div className="dashboard-popover-header">
+                  <h4 className="dashboard-popover-title">Display Currency</h4>
+                  <span style={{ fontSize: '0.72rem', color: '#94a3b8' }}>
+                    {currencySaving ? 'Saving…' : 'Applies to all pages'}
+                  </span>
+                </div>
+                <div className="dashboard-popover-body">
+                  {currencies.map((c) => (
+                    <button
+                      key={c.code}
+                      type="button"
+                      role="option"
+                      aria-selected={c.code === currency}
+                      disabled={currencySaving}
+                      className={`dashboard-currency-option ${c.code === currency ? 'selected' : ''}`}
+                      onClick={async () => {
+                        setCurrencyOpen(false);
+                        await setCurrency(c.code);
+                      }}
+                    >
+                      <span className="dashboard-currency-flag">{c.flag}</span>
+                      <span className="dashboard-currency-text">
+                        <strong>{c.code}</strong>
+                        <span>{c.name}</span>
+                      </span>
+                      <span className="dashboard-currency-symbol">{c.symbol.trim()}</span>
+                      {c.code === currency && <span className="dashboard-currency-check">✓</span>}
+                    </button>
+                  ))}
+                </div>
+                <div className="dashboard-popover-footer" style={{ fontSize: '0.72rem', color: '#64748b' }}>
+                  Changes how amounts are displayed. Stored values are not converted.
+                </div>
+              </div>
+            )}
+          </div>
+
           {/* Messages Button (💬) */}
           <div className="dashboard-icon-btn-wrap">
             <button 
@@ -179,6 +247,7 @@ export default function DashboardTopNav({
               title="Messages & Support"
               onClick={() => {
                 setMessagesOpen(!messagesOpen);
+                setCurrencyOpen(false);
                 setNotificationsOpen(false);
                 setHelpOpen(false);
                 setUserMenuOpen(false);
@@ -238,6 +307,7 @@ export default function DashboardTopNav({
               title="Notifications"
               onClick={() => {
                 setNotificationsOpen(!notificationsOpen);
+                setCurrencyOpen(false);
                 setMessagesOpen(false);
                 setHelpOpen(false);
                 setUserMenuOpen(false);
@@ -273,7 +343,7 @@ export default function DashboardTopNav({
                     <div>
                       <div className="dashboard-popover-item-title">Customer Invoices Paid</div>
                       <div className="dashboard-popover-item-text">
-                        Customer payments of $1,200.00 reconciled in full.
+                        Customer payments of {formatMoney(1200)} reconciled in full.
                       </div>
                     </div>
                   </Link>
@@ -287,7 +357,7 @@ export default function DashboardTopNav({
                     <div>
                       <div className="dashboard-popover-item-title">Quotation QT-1001 Active</div>
                       <div className="dashboard-popover-item-text">
-                        Pending commercial price estimate for $800.00 is awaiting customer reply.
+                        Pending commercial price estimate for {formatMoney(800)} is awaiting customer reply.
                       </div>
                     </div>
                   </Link>
@@ -324,6 +394,7 @@ export default function DashboardTopNav({
               title="Help & Guides"
               onClick={() => {
                 setHelpOpen(!helpOpen);
+                setCurrencyOpen(false);
                 setMessagesOpen(false);
                 setNotificationsOpen(false);
                 setUserMenuOpen(false);
@@ -401,6 +472,7 @@ export default function DashboardTopNav({
             className={`dashboard-user-badge-btn ${userMenuOpen ? 'active' : ''}`}
             onClick={() => {
               setUserMenuOpen(!userMenuOpen);
+              setCurrencyOpen(false);
               setMessagesOpen(false);
               setNotificationsOpen(false);
               setHelpOpen(false);
