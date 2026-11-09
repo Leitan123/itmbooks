@@ -1,5 +1,13 @@
 import nodemailer from 'nodemailer';
 
+const isPlaceholder = (val?: string) =>
+  !val ||
+  val.trim() === '' ||
+  val.includes('your-email') ||
+  val.includes('your-app-password') ||
+  val.includes('example.com') ||
+  val.includes('your_');
+
 export const sendAdminNotification = async (
   adminEmail: string,
   userEmail: string,
@@ -8,8 +16,13 @@ export const sendAdminNotification = async (
   userPassword: string
 ) => {
   // Check if SMTP is configured
-  if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
-    console.warn("SMTP credentials not configured in .env. Skipping email sending.");
+  if (
+    !process.env.SMTP_USER ||
+    !process.env.SMTP_PASS ||
+    isPlaceholder(process.env.SMTP_USER) ||
+    isPlaceholder(process.env.SMTP_PASS)
+  ) {
+    console.warn("[Mailer] SMTP credentials not configured in .env. Skipping admin notification.");
     return false;
   }
 
@@ -17,6 +30,9 @@ export const sendAdminNotification = async (
     host: process.env.SMTP_HOST || 'smtp.gmail.com',
     port: parseInt(process.env.SMTP_PORT || '587'),
     secure: process.env.SMTP_SECURE === 'true',
+    connectionTimeout: 4000,
+    greetingTimeout: 4000,
+    socketTimeout: 4000,
     auth: {
       user: process.env.SMTP_USER,
       pass: process.env.SMTP_PASS,
@@ -60,8 +76,13 @@ export const sendLoginNotification = async (
   userName?: string,
   loginMethod: string = 'Standard'
 ) => {
-  if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
-    console.warn("[Mailer] SMTP credentials not configured (SMTP_USER/SMTP_PASS). Skipping login email.");
+  if (
+    !process.env.SMTP_USER ||
+    !process.env.SMTP_PASS ||
+    isPlaceholder(process.env.SMTP_USER) ||
+    isPlaceholder(process.env.SMTP_PASS)
+  ) {
+    // Placeholder or missing credentials - skip immediately to avoid network timeouts during login
     return false;
   }
 
@@ -69,6 +90,9 @@ export const sendLoginNotification = async (
     host: process.env.SMTP_HOST || 'smtp.gmail.com',
     port: parseInt(process.env.SMTP_PORT || '587'),
     secure: process.env.SMTP_SECURE === 'true',
+    connectionTimeout: 4000,
+    greetingTimeout: 4000,
+    socketTimeout: 4000,
     auth: {
       user: process.env.SMTP_USER,
       pass: process.env.SMTP_PASS,

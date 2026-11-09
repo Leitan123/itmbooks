@@ -35,43 +35,49 @@ export default async function DashboardOverview({ params }: { params: Promise<{ 
   let totalRevenue = 0;
   let totalExpenses = 0;
   let netProfit = 0;
-
-  try {
-    const pnl = await getProfitAndLossData(tenantId);
-    totalRevenue = pnl.totalIncome;
-    totalExpenses = pnl.totalExpenses;
-    netProfit = pnl.netProfit;
-
-    const [bankRows] = await db.query(
-      `SELECT IFNULL(SUM(CurrentBalance), 0) as total 
-       FROM chart_of_accounts 
-       WHERE AccountTypeID = 1 
-         AND (AccountCode LIKE '10%' OR AccountName LIKE '%Cash%' OR AccountName LIKE '%Bank%')
-         AND (tenant_id = ? OR (tenant_id IS NULL AND NOT EXISTS (SELECT 1 FROM chart_of_accounts WHERE tenant_id = ?)))`,
-      [tenantId, tenantId]
-    ) as any;
-    if (bankRows && bankRows.length > 0) liquidFunds = Number(bankRows[0].total) || 0;
-  } catch (e) {
-    console.error("Error loading accounting metrics:", e);
-  }
-
-  // Receivables & Payables
   let totalReceivables = 0;
   let totalPayables = 0;
-  try {
-    const [invRows] = await db.query(
-      "SELECT SUM(total_amount) as total FROM saas_invoices WHERE tenant_id = ? AND status != 'Paid'",
-      [tenantId]
-    ) as any;
-    if (invRows && invRows.length > 0) totalReceivables = Number(invRows[0].total) || 0;
 
-    const [billRows] = await db.query(
-      "SELECT SUM(total_amount) as total FROM saas_bills WHERE tenant_id = ? AND status != 'Paid'",
-      [tenantId]
-    ) as any;
-    if (billRows && billRows.length > 0) totalPayables = Number(billRows[0].total) || 0;
+  try {
+    const [pnlRes, bankRes, invRes, billRes] = await Promise.allSettled([
+      getProfitAndLossData(tenantId),
+      db.query(
+        `SELECT IFNULL(SUM(CurrentBalance), 0) as total 
+         FROM chart_of_accounts 
+         WHERE AccountTypeID = 1 
+           AND (AccountCode LIKE '10%' OR AccountName LIKE '%Cash%' OR AccountName LIKE '%Bank%')
+           AND (tenant_id = ? OR (tenant_id IS NULL AND NOT EXISTS (SELECT 1 FROM chart_of_accounts WHERE tenant_id = ?)))`,
+        [tenantId, tenantId]
+      ),
+      db.query(
+        "SELECT SUM(total_amount) as total FROM saas_invoices WHERE tenant_id = ? AND status != 'Paid'",
+        [tenantId]
+      ),
+      db.query(
+        "SELECT SUM(total_amount) as total FROM saas_bills WHERE tenant_id = ? AND status != 'Paid'",
+        [tenantId]
+      ),
+    ]);
+
+    if (pnlRes.status === 'fulfilled') {
+      totalRevenue = pnlRes.value.totalIncome;
+      totalExpenses = pnlRes.value.totalExpenses;
+      netProfit = pnlRes.value.netProfit;
+    }
+    if (bankRes.status === 'fulfilled') {
+      const bankRows = (bankRes.value as any)[0];
+      if (bankRows && bankRows.length > 0) liquidFunds = Number(bankRows[0].total) || 0;
+    }
+    if (invRes.status === 'fulfilled') {
+      const invRows = (invRes.value as any)[0];
+      if (invRows && invRows.length > 0) totalReceivables = Number(invRows[0].total) || 0;
+    }
+    if (billRes.status === 'fulfilled') {
+      const billRows = (billRes.value as any)[0];
+      if (billRows && billRows.length > 0) totalPayables = Number(billRows[0].total) || 0;
+    }
   } catch (e) {
-    console.error(e);
+    console.error("Error loading accounting metrics:", e);
   }
 
   // Invoice Edition Metrics
@@ -109,33 +115,42 @@ export default async function DashboardOverview({ params }: { params: Promise<{ 
   let approvedQuotations = 0;
   let recentQuotations: any[] = [];
   try {
-    const [qStats] = await db.query(
-      `SELECT 
-        COUNT(*) as count, 
-        IFNULL(SUM(total_amount), 0) as total,
-        IFNULL(SUM(CASE WHEN status = 'Pending' THEN 1 ELSE 0 END), 0) as pending,
-        IFNULL(SUM(CASE WHEN status = 'Approved' THEN 1 ELSE 0 END), 0) as approved
-       FROM saas_quotations 
-       WHERE tenant_id = ?`,
-      [tenantId]
-    ) as any;
-    if (qStats && qStats.length > 0) {
-      totalQuotations = Number(qStats[0].count) || 0;
-      totalQuotationAmount = Number(qStats[0].total) || 0;
-      pendingQuotations = Number(qStats[0].pending) || 0;
-      approvedQuotations = Number(qStats[0].approved) || 0;
+    const [qStatsRes, qRecentRes] = await Promise.allSettled([
+      db.query(
+        `SELECT 
+          COUNT(*) as count, 
+          IFNULL(SUM(total_amount), 0) as total,
+          IFNULL(SUM(CASE WHEN status = 'Pending' THEN 1 ELSE 0 END), 0) as pending,
+          IFNULL(SUM(CASE WHEN status = 'Approved' THEN 1 ELSE 0 END), 0) as approved
+         FROM saas_quotations 
+         WHERE tenant_id = ?`,
+        [tenantId]
+      ),
+      db.query(
+        `SELECT q.*, c.name as customer_name 
+         FROM saas_quotations q
+         JOIN saas_customers c ON q.customer_id = c.id
+         WHERE q.tenant_id = ?
+         ORDER BY q.created_at DESC
+         LIMIT 5`,
+        [tenantId]
+      )
+    ]);
+
+    if (qStatsRes.status === 'fulfilled') {
+      const qStats = (qStatsRes.value as any)[0];
+      if (qStats && qStats.length > 0) {
+        totalQuotations = Number(qStats[0].count) || 0;
+        totalQuotationAmount = Number(qStats[0].total) || 0;
+        pendingQuotations = Number(qStats[0].pending) || 0;
+        approvedQuotations = Number(qStats[0].approved) || 0;
+      }
     }
 
-    const [qRecent] = await db.query(
-      `SELECT q.*, c.name as customer_name 
-       FROM saas_quotations q
-       JOIN saas_customers c ON q.customer_id = c.id
-       WHERE q.tenant_id = ?
-       ORDER BY q.created_at DESC
-       LIMIT 5`,
-      [tenantId]
-    ) as any;
-    recentQuotations = qRecent || [];
+    if (qRecentRes.status === 'fulfilled') {
+      const qRecent = (qRecentRes.value as any)[0];
+      recentQuotations = qRecent || [];
+    }
   } catch (e) {
     console.error("Error loading quotation metrics:", e);
   }
@@ -196,56 +211,59 @@ export default async function DashboardOverview({ params }: { params: Promise<{ 
     draftCount: 0,
   };
 
+  let recentInvoices: any[] = [];
   try {
-    const [stRows] = await db.query(
-      `SELECT 
-        status, 
-        COUNT(*) as count, 
-        IFNULL(SUM(total_amount), 0) as total 
-       FROM saas_invoices 
-       WHERE tenant_id = ? 
-       GROUP BY status`,
-      [tenantId]
-    ) as any;
+    const [stRes, iRecentRes] = await Promise.allSettled([
+      db.query(
+        `SELECT 
+          status, 
+          COUNT(*) as count, 
+          IFNULL(SUM(total_amount), 0) as total 
+         FROM saas_invoices 
+         WHERE tenant_id = ? 
+         GROUP BY status`,
+        [tenantId]
+      ),
+      db.query(
+        `SELECT i.*, c.name as customer_name 
+         FROM saas_invoices i
+         LEFT JOIN saas_customers c ON i.customer_id = c.id
+         WHERE i.tenant_id = ?
+         ORDER BY i.created_at DESC
+         LIMIT 5`,
+        [tenantId]
+      )
+    ]);
 
-    if (stRows && stRows.length > 0) {
-      for (const r of stRows) {
-        const count = Number(r.count) || 0;
-        const total = Number(r.total) || 0;
-        invoiceStatusStats.total += count;
-        if (r.status === 'Paid') {
-          invoiceStatusStats.paidCount += count;
-          invoiceStatusStats.paidAmount += total;
-        } else if (r.status === 'Overdue') {
-          invoiceStatusStats.overdueCount += count;
-          invoiceStatusStats.overdueAmount += total;
-        } else if (r.status === 'Draft') {
-          invoiceStatusStats.draftCount += count;
-        } else {
-          invoiceStatusStats.pendingCount += count;
-          invoiceStatusStats.pendingAmount += total;
+    if (stRes.status === 'fulfilled') {
+      const stRows = (stRes.value as any)[0];
+      if (stRows && stRows.length > 0) {
+        for (const r of stRows) {
+          const count = Number(r.count) || 0;
+          const total = Number(r.total) || 0;
+          invoiceStatusStats.total += count;
+          if (r.status === 'Paid') {
+            invoiceStatusStats.paidCount += count;
+            invoiceStatusStats.paidAmount += total;
+          } else if (r.status === 'Overdue') {
+            invoiceStatusStats.overdueCount += count;
+            invoiceStatusStats.overdueAmount += total;
+          } else if (r.status === 'Draft') {
+            invoiceStatusStats.draftCount += count;
+          } else {
+            invoiceStatusStats.pendingCount += count;
+            invoiceStatusStats.pendingAmount += total;
+          }
         }
       }
     }
-  } catch (e) {
-    console.error("Error loading invoice status breakdown:", e);
-  }
 
-  // Recent Invoices List
-  let recentInvoices: any[] = [];
-  try {
-    const [iRecent] = await db.query(
-      `SELECT i.*, c.name as customer_name 
-       FROM saas_invoices i
-       LEFT JOIN saas_customers c ON i.customer_id = c.id
-       WHERE i.tenant_id = ?
-       ORDER BY i.created_at DESC
-       LIMIT 5`,
-      [tenantId]
-    ) as any;
-    recentInvoices = iRecent || [];
+    if (iRecentRes.status === 'fulfilled') {
+      const iRecent = (iRecentRes.value as any)[0];
+      recentInvoices = iRecent || [];
+    }
   } catch (e) {
-    console.error("Error loading recent invoices:", e);
+    console.error("Error loading invoice stats & recent invoices:", e);
   }
 
   return (

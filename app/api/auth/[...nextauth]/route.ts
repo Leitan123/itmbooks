@@ -21,6 +21,14 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null;
         
+        // Fast instant check for demo accounts (zero DB wait)
+        if (credentials.email === 'demo@itmbooks.com' && credentials.password === 'demo123') {
+           return { id: '999', name: 'Demo User', email: 'demo@itmbooks.com', tenantId: '999', tenantSlug: 'demo-company', role: 'admin', accountType: 'Invoice' };
+        }
+        if (credentials.email === 'superadmin@itmbooks.com' && credentials.password === 'admin123') {
+           return { id: '1000', name: 'Super Admin', email: 'superadmin@itmbooks.com', tenantId: '1000', tenantSlug: 'admin', role: 'admin', accountType: 'Accounting' };
+        }
+
         try {
           const [rows] = await db.query(`
             SELECT u.*, t.slug as tenantSlug, t.account_type as account_type 
@@ -46,23 +54,9 @@ export const authOptions: NextAuthOptions = {
             }
           }
           
-          // Fallback for demonstration
-          if (credentials.email === 'demo@itmbooks.com' && credentials.password === 'demo123') {
-             return { id: '999', name: 'Demo User', email: 'demo@itmbooks.com', tenantId: '999', tenantSlug: 'demo-company', role: 'admin', accountType: 'Invoice' };
-          }
-          if (credentials.email === 'superadmin@itmbooks.com' && credentials.password === 'admin123') {
-             return { id: '1000', name: 'Super Admin', email: 'superadmin@itmbooks.com', tenantId: '1000', tenantSlug: 'admin', role: 'admin', accountType: 'Accounting' };
-          }
-          
           return null;
         } catch (error) {
-          console.error("Database auth error (fallback to demo):", error);
-          if (credentials.email === 'demo@itmbooks.com' && credentials.password === 'demo123') {
-             return { id: '999', name: 'Demo User', email: 'demo@itmbooks.com', tenantId: '999', tenantSlug: 'demo-company', role: 'admin', accountType: 'Invoice' };
-          }
-          if (credentials.email === 'superadmin@itmbooks.com' && credentials.password === 'admin123') {
-             return { id: '1000', name: 'Super Admin', email: 'superadmin@itmbooks.com', tenantId: '1000', tenantSlug: 'admin', role: 'admin', accountType: 'Accounting' };
-          }
+          console.error("Database auth error:", error);
           return null;
         }
       }
@@ -165,9 +159,10 @@ export const authOptions: NextAuthOptions = {
         (session.user as any).tenantId = token.tenantId;
         (session.user as any).tenantSlug = token.tenantSlug;
         (session.user as any).role = token.role;
-        (session.user as any).accountType = token.accountType;
+        (session.user as any).accountType = token.accountType || 'Invoice';
 
-        if (token.tenantId) {
+        // Only query DB if accountType wasn't already cached in the token
+        if (!token.accountType && token.tenantId) {
           try {
             const [tRows] = await db.query('SELECT account_type FROM tenants WHERE id = ? LIMIT 1', [token.tenantId]) as any;
             if (tRows && tRows.length > 0 && tRows[0].account_type) {
@@ -206,9 +201,11 @@ export const authOptions: NextAuthOptions = {
         if (userEmail) {
           const userName = message.user?.name || undefined;
           const method = message.account?.provider === 'google' ? 'Google OAuth' : 'Email & Password';
-          // Send login notification asynchronously in background
-          sendLoginNotification(userEmail, userName, method).catch((err) => {
-            console.error('[NextAuth] Error in sendLoginNotification event:', err);
+          // Non-blocking notification dispatch
+          setImmediate(() => {
+            sendLoginNotification(userEmail, userName, method).catch((err) => {
+              console.error('[NextAuth] Error in sendLoginNotification event:', err);
+            });
           });
         }
       } catch (err) {

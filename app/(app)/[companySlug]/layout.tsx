@@ -30,15 +30,22 @@ export default async function DashboardLayout({
   if (session && session.user) {
     const tenantId = (session.user as any).tenantId;
     try {
-      const [rows] = await db.query('SELECT name, theme_color FROM tenants WHERE id = ?', [tenantId]) as any;
+      const [rows] = await db.query('SELECT name, theme_color, currency FROM tenants WHERE id = ? LIMIT 1', [tenantId]) as any;
       if (rows && rows.length > 0) {
-        companyName = rows[0].name;
+        companyName = rows[0].name || "Company Name";
         themeColor = rows[0].theme_color;
+        if (rows[0].currency) {
+          currency = rows[0].currency;
+        } else {
+          currency = await getTenantCurrency(tenantId);
+        }
+      } else {
+        currency = await getTenantCurrency(tenantId);
       }
     } catch (e) {
       console.error("Error fetching tenant details in layout:", e);
+      currency = await getTenantCurrency(tenantId);
     }
-    currency = await getTenantCurrency(tenantId);
   }
 
   const rawAccountType = (session?.user as any)?.accountType || 'Invoice';
